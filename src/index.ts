@@ -7,9 +7,30 @@ import http from 'http';
 
 const PORT = 3001
 
-import { resolvers } from './schema/resolvers/index.js';
-import { typeDefs } from './schema/typeDefs/index.js';
+/** GraphQL */
+import { resolvers } from '@/schema/resolvers/index.js';
+import { typeDefs } from '@/schema/typeDefs/index.js';
 
+/** Database */
+import { createDb } from '@/database/create';
+
+/** Routes */
+import * as userRoutes from '@/routes/user.route';
+
+/** Test */
+import helloWorldDefault, { helloWorld } from '@/helpers';
+
+helloWorld()
+helloWorldDefault()
+
+/**
+ * Database
+*/
+createDb()
+
+/**
+ * Crate Express server with GraphQL Apollo Server.
+*/
 interface MyContext {
   token?: String;
 }
@@ -23,17 +44,26 @@ const server = new ApolloServer<MyContext>({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
-await server.start();
+const starter = async () => {
+  await server.start()
 
-app.use(
-  '/graphql',
-  cors<cors.CorsRequest>(),
-  express.json(),
-  expressMiddleware(server, {
-    context: async ({ req }) => ({ token: req.headers.token }),
-  }),
-);
+  /**
+   * Routes.
+  */
+  app.use(
+    '/graphql',
+    cors<cors.CorsRequest>(),
+    express.json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => ({ token: req.headers.token }),
+    }),
+  );
 
-await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve));
+  app.use(userRoutes.default)
+}
+starter()
+
+const listen = async () => await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve))
+listen()
 
 console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
