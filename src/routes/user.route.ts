@@ -1,22 +1,34 @@
+import { User } from "@/database/create";
 import { router } from "@/express.instance";
-import { IUser } from "@/routes/types";
 import { Request, Response } from "express";
 
-import { User } from "@/database/create";
 
 router.post('/users',
   async (req: Request, res: Response) => {
-    // Model the input data from the IUser interface.
-    // const newUserData = filterObjectByInterface<IUser>(req.body)
 
-    const jane = await User.create({ firstName: "Jane", lastName: "Doe" });
-    const message = `I'M TSX WATCH MOTHER FUCKER! Jane's auto-generated ID: ${jane.id}`;
+  const newUser = await User.create({ 
+    firstName: req.body.firstName, 
+    lastName: req.body.lastName, 
+    username: req.body.username, 
+    email: req.body.email 
+  });
+    
+  const message = `test New user auto-generated ID: ${newUser.id}`;
 
-  res.send({ newUserData: message, reqBody: req.body, test: {} as IUser });
+  res.send({ 
+    message: message, 
+    data: newUser, 
+    req: req.body 
+  });
 });
 
-router.get('/users', (_req: Request, res: Response) => {
-  res.send('Users list');
+router.get('/users', async (_req: Request, res: Response) => {
+  const users = await User.findAll()
+
+  res.send({
+    message: '',
+    data: users
+  });
 });
 
 router.get('/users/:id', (_req: Request, res: Response) => {
