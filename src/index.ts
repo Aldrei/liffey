@@ -19,6 +19,7 @@ import * as userRoutes from '@/routes/user.route';
 
 /** Test */
 import helloWorldDefault, { helloWorld } from '@/helpers';
+import bodyParser from 'body-parser';
 
 helloWorld()
 helloWorldDefault()
@@ -48,8 +49,10 @@ const starter = async () => {
   await server.start()
 
   /**
-   * Routes.
+   * Routes and Middlewares.
   */
+  app.use(bodyParser.json())
+
   app.use(
     '/graphql',
     cors<cors.CorsRequest>(),
