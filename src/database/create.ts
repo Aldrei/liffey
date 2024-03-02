@@ -3,10 +3,12 @@ import { DataTypes, Model } from 'sequelize';
 import db from '@/database/instance';
 
 // Define an interface extending ModelAttributes
-interface IUser {
+export interface IUser {
   id?: number;
   firstName: string;
   lastName: string;
+  username: string;
+  email: string;
   createdAt?: Date;
   updatedAt?: Date;
   // Add other properties as needed
@@ -29,6 +31,12 @@ export const User = db.define<UserModel>('User', {
   lastName: {
     type: DataTypes.STRING
     // allowNull defaults to true
+  },
+  username: {
+    type: DataTypes.STRING
+  },
+  email: {
+    type: DataTypes.STRING
   }
 }, {
   tableName: 'Users',
