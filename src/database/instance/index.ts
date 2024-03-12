@@ -3,7 +3,7 @@ import { Sequelize } from "sequelize";
 /**
  * Create a Docker named network to link with Postgres.
 */
-const db = new Sequelize('postgres://postgres:psql@172.17.0.2:5432/postgres')
+const db = new Sequelize('mysql://root@172.17.0.2:3306/IMOB')
 
 try {
   const init = async () => await db.authenticate();

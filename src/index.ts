@@ -5,14 +5,11 @@ import cors from 'cors';
 import express from 'express';
 import http from 'http';
 
-const PORT = 3001
-
 /** GraphQL */
 import { resolvers } from '@/schema/resolvers/index.js';
 import { typeDefs } from '@/schema/typeDefs/index.js';
 
 /** Database */
-import { createDb } from '@/database/create';
 
 /** Routes */
 import * as userRoutes from '@/routes/user.route';
@@ -24,10 +21,7 @@ import bodyParser from 'body-parser';
 helloWorld()
 helloWorldDefault()
 
-/**
- * Database
-*/
-createDb()
+const PORT = 3001
 
 /**
  * Crate Express server with GraphQL Apollo Server.
