@@ -4,7 +4,7 @@
     "prod:tspc": "npm run compile && node ./dist/index.js",
     "dev:tsx": "tsx watch --ignore ./src/index.ts ./src/index.ts",
     "db:reset": "tsx src/scripts/database/reset.ts",
-    "db:insert": "./src/scripts/database/populate.sh"
+    "db:insert": "./src/scripts/database/insert.sh"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.5",
