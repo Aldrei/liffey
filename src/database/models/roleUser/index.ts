@@ -18,20 +18,12 @@ export const RoleUser = db.define<RoleUserModel>('RoleUser', {
     type: DataTypes.STRING(255),
     allowNull: false,
     primaryKey: true,
-    // references: {
-    //   model: 'roles',
-    //   key: 'name',
-    // },
     onDelete: 'CASCADE',
   },
   user_id: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
     primaryKey: true,
-    // references: {
-    //   model: 'users',
-    //   key: 'id',
-    // },
     onDelete: 'CASCADE',
   },
 }, {

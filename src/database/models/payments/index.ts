@@ -8,11 +8,11 @@ export interface IPayment {
   id?: number;
   payment_category_id: number;
   client_id: number;
-  valor: number | null;
-  descricao: string;
-  quantidade: number | null;
-  pago: boolean | null;
-  pago_at: Date | null;
+  amount: number | null;
+  description: string;
+  quantity: number | null;
+  paid: boolean | null;
+  paid_at: Date | null;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -35,23 +35,23 @@ export const Payments = db.define<PaymentModel>('Payment', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
   },
-  valor: {
+  amount: {
     type: DataTypes.DECIMAL(15, 2),
     allowNull: true,
   },
-  descricao: {
+  description: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  quantidade: {
+  quantity: {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-  pago: {
+  paid: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  pago_at: {
+  paid_at: {
     type: DataTypes.DATE,
     allowNull: true,
   },

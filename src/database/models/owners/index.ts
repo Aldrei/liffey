@@ -8,62 +8,62 @@ export interface IOwner {
   client_id: number | null;
   city_id: number | null;
   neighborhood_id: number | null;
-  idProprietario: string;
-  nomeRazao: string;
-  cpfCnpj: string;
+  owner_id: string;
+  name_or_company: string;
+  cpf_or_cnpj: string;
   rg: string;
-  cnh: string;
-  pessoa: string;
-  inscricaoEstadual: string;
-  sexo: string;
-  estadoCivil: string;
-  dataNascimento: Date | null;
-  naturalidade: string;
-  profissao: string;
-  renda: number | null;
-  estado: string;
-  idCidade: string;
-  idBairro: string;
-  logradouro: string;
-  numero: string;
-  cep: string;
-  apto: string;
-  fixo: string;
-  celular: string;
+  driver_license: string;
+  person_type: string;
+  state_registration: string;
+  gender: string;
+  marital_status: string;
+  birth_date: Date | null;
+  place_of_birth: string;
+  profession: string;
+  income: number | null;
+  state: string;
+  idCidade: string; // Deprecated
+  idBairro: string; // Deprecated
+  street: string;
+  number: string;
+  zip_code: string;
+  apartment: string;
+  phone: string;
+  cellphone: string;
   fax: string;
   email: string;
   email2: string;
-  obs: string;
-  conjNome: string;
-  conjCpf: string;
-  conjRg: string;
-  conjCnh: string;
-  conjDataNascimento: string;
-  conjNaturalidade: string;
-  conjProfissao: string;
-  conjRenda: string;
-  conjPai: string;
-  conjMae: string;
-  conjMesmoEndereco: string;
-  conjEstado: string;
-  conjIdCidade: string;
-  conjIdBairro: string;
-  conjLogradouro: string;
-  conjNumero: string;
-  conjCep: string;
-  conjApto: string;
-  conjFixo: string;
-  conjCelular: string;
-  conjFax: string;
-  conjEmail: string;
-  conjEmail2: string;
-  conjSpc: string;
-  conjSpcEntrada: string;
-  conjSpcSaida: string;
-  conjSpcValor: string;
-  conjObs: string;
-  foto: string;
-  fotoMini: string;
+  notes: string;
+  spouse_name: string;
+  spouse_cpf: string;
+  spouse_rg: string;
+  spouse_driver_license: string;
+  spouse_birth_date: string | null;
+  spouse_place_of_birth: string;
+  spouse_profession: string;
+  spouse_income: string;
+  spouse_father: string;
+  spouse_mother: string;
+  same_address_as_owner: string;
+  spouse_state: string;
+  spouse_idCidade: string; // Deprecated
+  spouse_idBairro: string; // Deprecated
+  spouse_street: string;
+  spouse_number: string;
+  spouse_zip_code: string;
+  spouse_apartment: string;
+  spouse_phone: string;
+  spouse_cellphone: string;
+  spouse_fax: string;
+  spouse_email: string;
+  spouse_email2: string;
+  spouse_credit_analysis: string;
+  spouse_credit_analysis_entry: string | null;
+  spouse_credit_analysis_exit: string | null;
+  spouse_credit_analysis_value: string;
+  spouse_notes: string;
+  photo: string;
+  thumbnail: string;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -90,15 +90,15 @@ export const Owners = db.define<OwnerModel>('Owner', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
   },
-  idProprietario: {
+  owner_id: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  nomeRazao: {
+  name_or_company: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  cpfCnpj: {
+  cpf_or_cnpj: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -106,76 +106,76 @@ export const Owners = db.define<OwnerModel>('Owner', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  cnh: {
+  driver_license: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  pessoa: {
+  person_type: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  inscricaoEstadual: {
+  state_registration: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  sexo: {
+  gender: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  estadoCivil: {
+  marital_status: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  dataNascimento: {
+  birth_date: {
     type: DataTypes.DATEONLY,
     allowNull: true,
-    defaultValue: null
+    defaultValue: null,
   },
-  naturalidade: {
+  place_of_birth: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  profissao: {
+  profession: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  renda: {
+  income: {
     type: DataTypes.DECIMAL(15, 2),
     allowNull: true,
   },
-  estado: {
+  state: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  idCidade: {
+  idCidade: {  // Deprecated
     type: DataTypes.STRING,
     allowNull: false,
   },
-  idBairro: {
+  idBairro: {  // Deprecated
     type: DataTypes.STRING,
     allowNull: false,
   },
-  logradouro: {
+  street: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  numero: {
+  number: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  cep: {
+  zip_code: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  apto: {
+  apartment: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  fixo: {
+  phone: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  celular: {
+  cellphone: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -191,130 +191,130 @@ export const Owners = db.define<OwnerModel>('Owner', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  obs: {
+  notes: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjNome: {
+  spouse_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjCpf: {
+  spouse_cpf: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjRg: {
+  spouse_rg: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjCnh: {
+  spouse_driver_license: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjDataNascimento: {
+  spouse_birth_date: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: null
+    defaultValue: null,
   },
-  conjNaturalidade: {
+  spouse_place_of_birth: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjProfissao: {
+  spouse_profession: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjRenda: {
+  spouse_income: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjPai: {
+  spouse_father: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjMae: {
+  spouse_mother: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjMesmoEndereco: {
+  same_address_as_owner: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjEstado: {
+  spouse_state: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjIdCidade: {
+  spouse_idCidade: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjIdBairro: {
+  spouse_idBairro: { // Deprecated
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjLogradouro: {
+  spouse_street: { // Deprecated
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjNumero: {
+  spouse_number: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjCep: {
+  spouse_zip_code: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjApto: {
+  spouse_apartment: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjFixo: {
+  spouse_phone: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjCelular: {
+  spouse_cellphone: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjFax: {
+  spouse_fax: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjEmail: {
+  spouse_email: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjEmail2: {
+  spouse_email2: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjSpc: {
+  spouse_credit_analysis: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjSpcEntrada: {
+  spouse_credit_analysis_entry: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: null
+    defaultValue: null,
   },
-  conjSpcSaida: {
+  spouse_credit_analysis_exit: {
     type: DataTypes.STRING,
     allowNull: true,
-    defaultValue: null
+    defaultValue: null,
   },
-  conjSpcValor: {
+  spouse_credit_analysis_value: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  conjObs: {
+  spouse_notes: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  foto: {
+  photo: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  fotoMini: {
+  thumbnail: {
     type: DataTypes.STRING,
     allowNull: false,
   },

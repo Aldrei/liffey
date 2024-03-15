@@ -8,8 +8,8 @@ export interface IVideo {
   id: number;
   property_id: number;
   src: string;
-  legenda: string | null;
-  ordem: number | null;
+  caption: string | null;
+  order: number | null;
   created_at: Date | null;
   updated_at: Date | null;
 }
@@ -33,11 +33,11 @@ export const Videos = db.define<VideosModel>('Videos', {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
-  legenda: {
+  caption: {
     type: DataTypes.STRING(255),
     allowNull: true,
   },
-  ordem: {
+  order: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
   },

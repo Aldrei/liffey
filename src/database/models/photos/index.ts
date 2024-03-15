@@ -6,12 +6,12 @@ import { DataTypes, Model } from 'sequelize';
 export interface IPhoto {
   id?: number;
   property_id: number;
-  tipo: string | null;
+  type: string | null;
   src: string;
-  srcMini: string | null;
-  midiaPrincipal: string | null;
-  legenda: string | null;
-  ordem: number | null;
+  thumb: string | null;
+  main_media: string | null;
+  caption: string | null;
+  order: number | null;
   rotate: number | null;
   created_at?: Date;
   updated_at?: Date;
@@ -31,7 +31,7 @@ export const Photos = db.define<PhotoModel>('Photo', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
   },
-  tipo: {
+  type: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -39,19 +39,19 @@ export const Photos = db.define<PhotoModel>('Photo', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  srcMini: {
+  thumb: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  midiaPrincipal: {
+  main_media: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  legenda: {
+  caption: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  ordem: {
+  order: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
   },

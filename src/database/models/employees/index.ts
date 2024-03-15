@@ -10,37 +10,37 @@ export interface IEmployees {
   client_id?: number | null;
   city_id?: number | null;
   neighborhood_id?: number | null;
-  nome?: string | null;
-  dataNascimento?: string | null;
-  cargo?: string | null;
-  salarioBase?: string | null;
+  name?: string | null;
+  birth_date?: string | null;
+  position?: string | null;
+  base_salary?: string | null;
   creci?: string | null;
-  usuarioDoSistema?: string | null;
-  ativo?: string | null;
-  estado?: string | null;
-  idCidade?: string | null;
-  idBairro?: string | null;
-  logradouro?: string | null;
-  numero?: string | null;
-  cep?: string | null;
-  apto?: string | null;
+  system_user?: string | null;
+  active?: string | null;
+  state?: string | null;
+  idCidade?: string | null; // Preserved
+  idBairro?: string | null; // Preserved
+  street?: string | null;
+  number?: string | null;
+  zip_code?: string | null;
+  apartment?: string | null;
   email?: string | null;
   email2?: string | null;
-  celular?: string | null;
-  fixo?: string | null;
-  foto?: string | null;
-  fotoMini?: string | null;
-  publicarNoSite?: string | null;
-  oculto?: string | null;
+  cellphone?: string | null;
+  phone?: string | null;
+  photo?: string | null;
+  thumbnail?: string | null;
+  publish_on_website?: string | null;
+  hidden?: string | null;
   created_at?: Date;
   updated_at?: Date;
 }
 
 // Define the Employees model with the interface and extend Model
-interface EmployeesModel extends Model<IEmployees>, IEmployees {}
+interface EmployeeModel extends Model<IEmployees>, IEmployees {}
 
 // Define the employees table
-export const Employees = db.define<EmployeesModel>('Employees', {
+export const Employees = db.define<EmployeeModel>('Employees', {
   id: {
     type: DataTypes.INTEGER.UNSIGNED,
     autoIncrement: true,
@@ -62,19 +62,19 @@ export const Employees = db.define<EmployeesModel>('Employees', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
   },
-  nome: {
+  name: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  dataNascimento: {
+  birth_date: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  cargo: {
+  position: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  salarioBase: {
+  base_salary: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -82,39 +82,39 @@ export const Employees = db.define<EmployeesModel>('Employees', {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  usuarioDoSistema: {
+  system_user: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  ativo: {
+  active: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  estado: {
+  state: {
     type: DataTypes.STRING,
     allowNull: true,
   },
   idCidade: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING, // Preserved
     allowNull: true,
   },
   idBairro: {
+    type: DataTypes.STRING, // Preserved
+    allowNull: true,
+  },
+  street: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  logradouro: {
+  number: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  numero: {
+  zip_code: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  cep: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  apto: {
+  apartment: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -126,27 +126,27 @@ export const Employees = db.define<EmployeesModel>('Employees', {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  celular: {
+  cellphone: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  fixo: {
+  phone: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  foto: {
+  photo: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  fotoMini: {
+  thumbnail: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  publicarNoSite: {
+  publish_on_website: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  oculto: {
+  hidden: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -166,6 +166,8 @@ export const Employees = db.define<EmployeesModel>('Employees', {
   collate: 'utf8_unicode_ci',
   timestamps: false,
 });
+
+
 
 export const EmployeesSetup = {
   syncTable: async () => await Employees.sync({ force: true }),

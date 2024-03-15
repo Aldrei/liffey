@@ -13,94 +13,94 @@ export interface IProperty {
   agent_id: number | null;
   broker_id: number | null;
   code: number | null;
-  codeTipo: number | null;
-  codePretty: string | null;
-  nomeImovel: string | null;
-  matricula: string | null;
-  lote: string | null;
-  quadra: string | null;
-  empreendimento: number | null;
-  placa: number | null;
-  possuiFoto: number | null;
-  exclusividade: number | null;
-  exclusividadePeriodoInicio: Date | null;
-  exclusividadePeriodoFim: Date | null;
-  finalidade: string | null;
-  categoria: string | null;
-  tipo: string | null;
+  code_type: number | null;
+  code_pretty: string | null;
+  property_name: string | null;
+  registration: string | null;
+  lot: string | null;
+  block: string | null;
+  development: boolean | null;
+  sign: boolean | null;
+  has_photo: boolean | null;
+  exclusivity: boolean | null;
+  exclusivity_start_period: Date | null;
+  exclusivity_end_period: Date | null;
+  purpose: string | null;
+  category: string | null;
+  type: string | null;
   status: string | null;
-  aluguelPeriodoInicio: Date | null;
-  aluguelPeriodoFim: Date | null;
-  dormitorio: string | null;
-  garagem: string | null;
-  lavanderia: number | null;
-  telhado: string | null;
-  forro: string | null;
-  piso: string | null;
-  aberturas: string | null;
-  alarme: number | null;
-  portaoEletronico: number | null;
-  pocoArtesiano: number | null;
-  cercaEletrica: number | null;
-  cameraDeVideo: number | null;
-  nascerDoSol: string | null;
-  descGeral: string | null;
-  dataAgenciamento: Date | null;
-  dataVenda: Date | null;
-  apNomeCondominio: string | null;
-  apPredio: string | null;
-  apPavimento: string | null;
-  apTotalPavimentos: string | null;
-  apApto: string | null;
-  apElevador: number | null;
-  areaTotal: number | null;
-  areaConstruida: number | null;
-  areaFrente: number | null;
-  areaFundos: number | null;
-  areaDireita: number | null;
-  areaEsquerda: number | null;
-  valor: number | null;
-  valorCondicaoDeComissao: string | null;
-  valorPorcentagemDeComissao: number | null;
-  valorPorcentagemDoCorretor: number | null;
-  valorPorcentagemDoAgenciador: number | null;
-  valorCondominio: number | null;
-  valorIPTUPago: string | null;
-  valorIPTU: number | null;
-  valorInssPago: string | null;
-  valorInss: number | null;
-  valorIndiceDoCUB: number | null;
-  valorAlgoParaRegularizar: string | null;
-  valorAlgoParaRegularizarDesc: string | null;
-  condAgente: string | null;
-  condPrestacao: string | null;
-  condSaldoDevedor: string | null;
-  condPrazo: string | null;
-  condReajuste: string | null;
-  condFGTS: number | null;
-  condDoacao: number | null;
-  condFinanciamento: number | null;
-  condCartaConsorcio: number | null;
-  condPartePermuta: number | null;
-  condSituacao: string | null;
-  condObs: string | null;
-  localEstado: string | null;
-  localIdCidade: string | null;
-  localIdBairro: string | null;
-  localLogradouro: string | null;
-  localNumero: string | null;
-  localCEP: string | null;
-  localImediacoes: string | null;
+  rent_start_period: Date | null;
+  rent_end_period: Date | null;
+  bedrooms: string | null;
+  garage: string | null;
+  laundry: boolean | null;
+  roof: string | null;
+  ceiling: string | null;
+  floor: string | null;
+  openings: string | null;
+  alarm: boolean | null;
+  electronic_gate: boolean | null;
+  artesian_well: boolean | null;
+  electric_fence: boolean | null;
+  video_camera: boolean | null;
+  sunrise: string | null;
+  general_description: string | null;
+  agency_date: Date | null;
+  sale_date: Date | null;
+  condo_name: string | null;
+  condo_building: string | null;
+  condo_floor: string | null;
+  condo_total_floors: string | null;
+  condo_unit: string | null;
+  condo_elevator: boolean | null;
+  total_area: number | null;
+  built_area: number | null;
+  front_area: number | null;
+  back_area: number | null;
+  right_area: number | null;
+  left_area: number | null;
+  value: number | null;
+  commission_condition_value: string | null;
+  commission_percentage_value: number | null;
+  broker_percentage_value: number | null;
+  agency_percentage_value: number | null;
+  condo_value: number | null;
+  paid_iptu_value: string | null;
+  iptu_value: number | null;
+  paid_inss_value: string | null;
+  inss_value: number | null;
+  cub_index_value: number | null;
+  regularization_something_value: string | null;
+  regularization_something_description: string | null;
+  agent_condition: string | null;
+  installment_condition: string | null;
+  outstanding_balance_condition: string | null;
+  deadline_condition: string | null;
+  readjustment_condition: string | null;
+  fgts_condition: boolean | null;
+  donation_condition: boolean | null;
+  financing_condition: boolean | null;
+  consortium_letter_condition: boolean | null;
+  exchange_part_condition: boolean | null;
+  situation_condition: string | null;
+  condition_observation: string | null;
+  state_location: string | null;
+  city_location_id: string | null;
+  neighborhood_location_id: string | null;
+  location_street: string | null;
+  location_number: string | null;
+  location_zip_code: string | null;
+  nearby_locations: string | null;
   latitude: string | null;
   longitude: string | null;
-  zoom: number | null;
-  sitePublicarImovel: number | null;
-  sitePublicarValor: number | null;
-  siteImovelDestaque: number | null;
-  siteAcesso: string | null;
-  sitePublicarMapa: number | null;
-  videoURL: string | null;
-  idUltimaTransacao: string | null;
+  zoom: boolean | null;
+  publish_property_website: boolean | null;
+  publish_value_website: boolean | null;
+  property_highlight_website: boolean | null;
+  website_access: string | null;
+  publish_map_website: boolean | null;
+  video_url: string | null;
+  last_transaction_id: string | null;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -143,65 +143,65 @@ export const Properties = db.define<PropertyModel>('Property', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
   },
-  codeTipo: {
+  code_type: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
   },
-  codePretty: {
+  code_pretty: {
     type: DataTypes.STRING(15),
     allowNull: true,
   },
-  nomeImovel: {
+  property_name: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  matricula: {
+  registration: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  lote: {
+  lot: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  quadra: {
+  block: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  empreendimento: {
-    type: DataTypes.TINYINT,
+  development: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  placa: {
-    type: DataTypes.TINYINT,
+  sign: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  possuiFoto: {
-    type: DataTypes.TINYINT,
+  has_photo: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  exclusividade: {
-    type: DataTypes.TINYINT,
+  exclusivity: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  exclusividadePeriodoInicio: {
+  exclusivity_start_period: {
     type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null
   },
-  exclusividadePeriodoFim: {
+  exclusivity_end_period: {
     type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null
   },
-  finalidade: {
+  purpose: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  categoria: {
+  category: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  tipo: {
+  type: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -209,255 +209,255 @@ export const Properties = db.define<PropertyModel>('Property', {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  aluguelPeriodoInicio: {
+  rent_start_period: {
     type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null
   },
-  aluguelPeriodoFim: {
+  rent_end_period: {
     type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null
   },
-  dormitorio: {
+  bedrooms: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  garagem: {
+  garage: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  lavanderia: {
-    type: DataTypes.TINYINT,
+  laundry: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  telhado: {
+  roof: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  forro: {
+  ceiling: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  piso: {
+  floor: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  aberturas: {
+  openings: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  alarme: {
-    type: DataTypes.TINYINT,
+  alarm: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  portaoEletronico: {
-    type: DataTypes.TINYINT,
+  electronic_gate: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  pocoArtesiano: {
-    type: DataTypes.TINYINT,
+  artesian_well: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  cercaEletrica: {
-    type: DataTypes.TINYINT,
+  electric_fence: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  cameraDeVideo: {
-    type: DataTypes.TINYINT,
+  video_camera: {
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  nascerDoSol: {
+  sunrise: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  descGeral: {
+  general_description: {
     type: DataTypes.TEXT,
     allowNull: true,
   },
-  dataAgenciamento: {
+  agency_date: {
     type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null
   },
-  dataVenda: {
+  sale_date: {
     type: DataTypes.DATE,
     allowNull: true,
     defaultValue: null
   },
-  apNomeCondominio: {
+  condo_name: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  apPredio: {
+  condo_building: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  apPavimento: {
+  condo_floor: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  apTotalPavimentos: {
+  condo_total_floors: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  apApto: {
+  condo_unit: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  apElevador: {
-    type: DataTypes.TINYINT,
-    allowNull: true,
-  },
-  areaTotal: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  areaConstruida: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  areaFrente: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  areaFundos: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  areaDireita: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  areaEsquerda: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  valor: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  valorCondicaoDeComissao: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  valorPorcentagemDeComissao: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  valorPorcentagemDoCorretor: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  valorPorcentagemDoAgenciador: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  valorCondominio: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  valorIPTUPago: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  valorIPTU: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  valorInssPago: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  valorInss: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  valorIndiceDoCUB: {
-    type: DataTypes.DECIMAL(15, 2),
-    allowNull: true,
-  },
-  valorAlgoParaRegularizar: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  valorAlgoParaRegularizarDesc: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  condAgente: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  condPrestacao: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  condSaldoDevedor: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  condPrazo: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  condReajuste: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  condFGTS: {
+  condo_elevator: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  condDoacao: {
-    type: DataTypes.BOOLEAN,
+  total_area: {
+    type: DataTypes.DECIMAL(15, 2),
     allowNull: true,
   },
-  condFinanciamento: {
-    type: DataTypes.BOOLEAN,
+  built_area: {
+    type: DataTypes.DECIMAL(15, 2),
     allowNull: true,
   },
-  condCartaConsorcio: {
-    type: DataTypes.BOOLEAN,
+  front_area: {
+    type: DataTypes.DECIMAL(15, 2),
     allowNull: true,
   },
-  condPartePermuta: {
-    type: DataTypes.BOOLEAN,
+  back_area: {
+    type: DataTypes.DECIMAL(15, 2),
     allowNull: true,
   },
-  condSituacao: {
+  right_area: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  left_area: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  value: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  commission_condition_value: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  condObs: {
+  commission_percentage_value: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  broker_percentage_value: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  agency_percentage_value: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  condo_value: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  paid_iptu_value: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  iptu_value: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  paid_inss_value: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  inss_value: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  cub_index_value: {
+    type: DataTypes.DECIMAL(15, 2),
+    allowNull: true,
+  },
+  regularization_something_value: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  regularization_something_description: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  agent_condition: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  installment_condition: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  outstanding_balance_condition: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  deadline_condition: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  readjustment_condition: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  fgts_condition: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+  },
+  donation_condition: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+  },
+  financing_condition: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+  },
+  consortium_letter_condition: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+  },
+  exchange_part_condition: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true,
+  },
+  situation_condition: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  condition_observation: {
     type: DataTypes.TEXT,
     allowNull: true,
   },
-  localEstado: {
+  state_location: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  localIdCidade: {
+  city_location_id: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  localIdBairro: {
+  neighborhood_location_id: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  localLogradouro: {
+  location_street: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  localNumero: {
+  location_number: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  localCEP: {
+  location_zip_code: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  localImediacoes: {
+  nearby_locations: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -473,31 +473,31 @@ export const Properties = db.define<PropertyModel>('Property', {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  sitePublicarImovel: {
+  publish_property_website: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  sitePublicarValor: {
+  publish_value_website: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  siteImovelDestaque: {
+  property_highlight_website: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  siteAcesso: {
+  website_access: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  sitePublicarMapa: {
+  publish_map_website: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  videoURL: {
+  video_url: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  idUltimaTransacao: {
+  last_transaction_id: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -517,6 +517,7 @@ export const Properties = db.define<PropertyModel>('Property', {
   collate: 'utf8_unicode_ci',
   timestamps: false,
 });
+
 
 export const PropertiesSetup = {
   syncTable: async () => await Properties.sync({ force: true }),

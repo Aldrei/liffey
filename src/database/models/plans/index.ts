@@ -10,7 +10,7 @@ export interface IPlan {
   name: string;
   description: string;
   value: number;
-  duration: number;
+  period: number;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -41,7 +41,7 @@ export const Plans = db.define<PlanModel>('Plan', {
     type: DataTypes.DECIMAL(8, 2),
     allowNull: false,
   },
-  duration: {
+  period: {
     type: DataTypes.SMALLINT,
     allowNull: false,
   },

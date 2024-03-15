@@ -2,21 +2,23 @@ import db from '@/database/instance'; // Replace with your actual path to the Se
 import { DataTypes, Model } from 'sequelize';
 
 // Define the interface for the banner model
+// Define the interface for the banner model
 export interface IBanner {
   id?: number;
   client_id?: number | null;
   property_id: number;
-  titulo?: string | null;
-  subtitulo?: string | null;
-  resenha?: string | null;
-  descGeral?: string | null;
+  title?: string | null;
+  subtitle?: string | null;
+  summary?: string | null;
+  general_description?: string | null;
   img: string;
-  imgMini: string;
+  thumb: string;
   link: string;
-  posicao: number;
+  position: number;
   created_at?: Date;
   updated_at?: Date;
 }
+
 
 // Define the Banner model with the interface and extend Model
 interface BannerModel extends Model<IBanner>, IBanner {}
@@ -35,19 +37,19 @@ export const Banners = db.define<BannerModel>('Banner', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
   },
-  titulo: {
+  title: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  subtitulo: {
+  subtitle: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  resenha: {
+  summary: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  descGeral: {
+  general_description: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -55,7 +57,7 @@ export const Banners = db.define<BannerModel>('Banner', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  imgMini: {
+  thumb: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -63,7 +65,7 @@ export const Banners = db.define<BannerModel>('Banner', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  posicao: {
+  position: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },

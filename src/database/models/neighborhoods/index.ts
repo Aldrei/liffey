@@ -8,9 +8,9 @@ export interface INeighborhood {
   id?: number;
   client_id: number | null;
   city_id: number | null;
-  idBairro: string;
-  nome: string;
-  idCidade: string;
+  idBairro: string; // Preserved
+  idCidade: string; // Preserved
+  name: string;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -34,14 +34,14 @@ export const Neighborhoods = db.define<NeighborhoodModel>('Neighborhood', {
     allowNull: true,
   },
   idBairro: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  nome: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING, // Preserved
     allowNull: false,
   },
   idCidade: {
+    type: DataTypes.STRING, // Preserved
+    allowNull: false,
+  },
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
   },

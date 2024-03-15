@@ -1,15 +1,12 @@
-import { User } from "@/database/create";
+import { Users } from "@/database/models";
 import { router } from "@/express.instance";
 import { Request, Response } from "express";
-
 
 router.post('/users',
   async (req: Request, res: Response) => {
 
-  const newUser = await User.create({ 
-    firstName: req.body.firstName, 
-    lastName: req.body.lastName, 
-    username: req.body.username, 
+  const newUser = await Users.create({ 
+    name: req.body.firstName, 
     email: req.body.email 
   });
     
@@ -23,24 +20,12 @@ router.post('/users',
 });
 
 router.get('/users', async (_req: Request, res: Response) => {
-  const users = await User.findAll()
+  const users = await Users.findAll()
 
   res.send({
     message: '',
     data: users
   });
-});
-
-router.get('/users/:id', (_req: Request, res: Response) => {
-  res.send('Users find');
-});
-
-router.put('/users/:id', (_req: Request, res: Response) => {
-  res.send('Users update');
-});
-
-router.delete('/users/:id', (_req: Request, res: Response) => {
-  res.send('Users delete');
 });
 
 export default router;

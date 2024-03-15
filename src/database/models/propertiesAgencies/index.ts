@@ -3,27 +3,27 @@ import db from '@/database/instance';
 import { Clients } from '@/database/models';
 import { DataTypes, Model } from 'sequelize';
 
-// Define the interface for the properties_agency model
+// Define the interface for the properties_agencies model
 export interface IPropertiesAgencies {
   id?: number;
   client_id: number;
   owner: string;
-  ownerPhone: string;
-  ownerEmail?: string | null;
+  owner_phone: string;
+  owner_email?: string | null;
   state: string;
   city: string;
   neighborhood: string;
   address: string;
-  tipo: string;
-  dormitorio: string;
-  garagem: string;
-  lavanderia?: boolean | null;
-  alarme?: boolean | null;
-  elevador?: boolean | null;
-  portaoEletronico?: boolean | null;
-  pocoArtesiano?: boolean | null;
-  cercaEletrica?: boolean | null;
-  cameraDeVideo?: boolean | null;
+  type: string;
+  bedrooms: string;
+  garage: string;
+  laundry?: boolean | null;
+  alarm?: boolean | null;
+  elevator?: boolean | null;
+  electronic_gate?: boolean | null;
+  artesian_well?: boolean | null;
+  electric_fence?: boolean | null;
+  video_camera?: boolean | null;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -46,11 +46,11 @@ export const PropertiesAgencies = db.define<PropertiesAgenciesModel>('Properties
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-  ownerPhone: {
+  owner_phone: {
     type: DataTypes.STRING(20),
     allowNull: false,
   },
-  ownerEmail: {
+  owner_email: {
     type: DataTypes.STRING(100),
     allowNull: true,
   },
@@ -70,43 +70,43 @@ export const PropertiesAgencies = db.define<PropertiesAgenciesModel>('Properties
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-  tipo: {
+  type: {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-  dormitorio: {
+  bedrooms: {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-  garagem: {
+  garage: {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-  lavanderia: {
+  laundry: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  alarme: {
+  alarm: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  elevador: {
+  elevator: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  portaoEletronico: {
+  electronic_gate: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  pocoArtesiano: {
+  artesian_well: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  cercaEletrica: {
+  electric_fence: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  cameraDeVideo: {
+  video_camera: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },

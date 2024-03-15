@@ -21,7 +21,7 @@ export const Analytics = db.define<AnalyticsModel>('Analytics', {
   id: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true, // Primary keys are create in database level.
+    primaryKey: true, // Primary keys are created at the database level.
   },
   client_id: {
     type: DataTypes.INTEGER.UNSIGNED,

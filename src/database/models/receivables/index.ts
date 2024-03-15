@@ -4,15 +4,16 @@ import { Clients, ReceivablesCategories } from '@/database/models';
 import { DataTypes, Model } from 'sequelize';
 
 // Define the interface for the receivables model
+// Define the interface for the receivables model
 export interface IReceivables {
   id?: number;
   receivable_category_id: number;
   client_id: number;
-  valor?: number | null;
-  descricao: string;
-  quantidade?: number | null;
-  recebido?: boolean | null;
-  recebido_at?: Date | null;
+  value?: number | null;
+  description: string;
+  quantity?: number | null;
+  received?: boolean | null;
+  received_at?: Date | null;
   created_at?: Date;
   updated_at?: Date;
 }
@@ -35,23 +36,23 @@ export const Receivables = db.define<ReceivablesModel>('Receivables', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
   },
-  valor: {
+  value: {
     type: DataTypes.DECIMAL(15, 2),
     allowNull: true,
   },
-  descricao: {
+  description: {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
-  quantidade: {
+  quantity: {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-  recebido: {
+  received: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
   },
-  recebido_at: {
+  received_at: {
     type: DataTypes.DATE,
     allowNull: true,
   },
