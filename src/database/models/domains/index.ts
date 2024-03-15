@@ -66,8 +66,8 @@ export const Domains = db.define<DomainModel>('Domain', {
   },
 }, {
   tableName: 'domains',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const DomainsSetup = {

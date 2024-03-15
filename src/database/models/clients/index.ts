@@ -231,8 +231,8 @@ export const Clients = db.define<ClientModel>('Client', {
   },
 }, {
   tableName: 'clients',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false
 });
 
 export const ClientsSetup = {

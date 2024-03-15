@@ -1,2 +1,4 @@
 node_modules
 dist
+
+src/database/docker-entrypoint-initdb.d/*.sql

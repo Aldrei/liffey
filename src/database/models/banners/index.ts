@@ -80,10 +80,8 @@ export const Banners = db.define<BannerModel>('Banner', {
   },
 }, {
   tableName: 'banners',
-  timestamps: true,
-  createdAt: false,
-  updatedAt: 'updateTimestamp',
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const BannersSetup = {

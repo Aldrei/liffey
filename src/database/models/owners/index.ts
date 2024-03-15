@@ -127,8 +127,9 @@ export const Owners = db.define<OwnerModel>('Owner', {
     allowNull: false,
   },
   dataNascimento: {
-    type: DataTypes.DATE,
+    type: DataTypes.DATEONLY,
     allowNull: true,
+    defaultValue: null
   },
   naturalidade: {
     type: DataTypes.STRING,
@@ -212,7 +213,8 @@ export const Owners = db.define<OwnerModel>('Owner', {
   },
   conjDataNascimento: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
+    defaultValue: null
   },
   conjNaturalidade: {
     type: DataTypes.STRING,
@@ -292,11 +294,13 @@ export const Owners = db.define<OwnerModel>('Owner', {
   },
   conjSpcEntrada: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
+    defaultValue: null
   },
   conjSpcSaida: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
+    defaultValue: null
   },
   conjSpcValor: {
     type: DataTypes.STRING,
@@ -327,8 +331,8 @@ export const Owners = db.define<OwnerModel>('Owner', {
   },
 }, {
   tableName: 'owners',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const OwnersSetup = {

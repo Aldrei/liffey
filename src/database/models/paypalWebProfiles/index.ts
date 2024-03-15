@@ -44,8 +44,8 @@ export const PaypalWebProfile = db.define<PaypalWebProfileModel>('PaypalWebProfi
   },
 }, {
   tableName: 'paypal_web_profiles',
-  timestamps: false, // No timestamps for this table
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const PaypalWebProfileSetup = {

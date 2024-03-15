@@ -45,8 +45,8 @@ export const Orders = db.define<OrderModel>('Order', {
   },
 }, {
   tableName: 'orders',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const OrdersSetup = {

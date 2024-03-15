@@ -47,8 +47,8 @@ export const Palettes = db.define<PaletteModel>('Palette', {
   },
 }, {
   tableName: 'palettes',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const PalettesSetup = {

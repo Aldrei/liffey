@@ -123,8 +123,8 @@ export const PropertiesAgencies = db.define<PropertiesAgenciesModel>('Properties
   },
 }, {
   tableName: 'properties_agencies',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const PropertiesAgenciesSetup = {

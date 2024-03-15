@@ -32,8 +32,8 @@ export const PasswordsResets = db.define<PasswordsResetsModel>('PasswordsResets'
   },
 }, {
   tableName: 'passwords_resets',
-  timestamps: false, // No timestamps for this table
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const PasswordsResetsSetup = {

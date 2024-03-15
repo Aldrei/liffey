@@ -45,8 +45,8 @@ export const Cities = db.define<CityModel>('City', {
   },
 }, {
   tableName: 'cities',
-  timestamps: false, // Disable timestamps for this table
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const CitiesSetup = {

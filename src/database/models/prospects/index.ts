@@ -68,8 +68,8 @@ export const Prospects = db.define<ProspectsModel>('Prospects', {
   },
 }, {
   tableName: 'prospects',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const ProspectsSetup = {

@@ -52,8 +52,8 @@ export const Emails = db.define<EmailModel>('Emails', {
   },
 }, {
   tableName: 'emails',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const EmailsSetup = {

@@ -9,16 +9,33 @@ export const resetDatabase = async () => {
 
   db
     .query('SET FOREIGN_KEY_CHECKS = 0')
-    .then(() => db.drop({ cascade: true }))
     .then(async () => {
       console.log('------------------- ------------------- -------------------');
-      console.log('------------------- STARTING TABLES -------------------');
+      console.log('------------------- DROP DATABASE -------------------');
+      console.log('------------------- ------------------- -------------------');
+      return await db.query('DROP DATABASE IF EXISTS IMOB')
+    })
+    .then(async () => {
+      console.log('------------------- ------------------- -------------------');
+      console.log('------------------- CREATING DATABASE -------------------');
+      console.log('------------------- ------------------- -------------------');
+      return await db.query('CREATE DATABASE IF NOT EXISTS IMOB')
+    })
+    .then(async () => {
+      console.log('------------------- ------------------- -------------------');
+      console.log('------------------- USING DATABASE -------------------');
+      console.log('------------------- ------------------- -------------------');
+      return await db.query('USE IMOB')
+    })
+    .then(async () => {
+      console.log('------------------- ------------------- -------------------');
+      console.log('------------------- SYNCING TABLES -------------------');
       console.log('------------------- ------------------- -------------------');
       return await syncTables()
     })
     .then(async () => {
       console.log('------------------- ------------------- -------------------');
-      console.log('------------------- STARTING RELATIONSHIPS -------------------');
+      console.log('------------------- SYNCING RELATIONSHIPS -------------------');
       console.log('------------------- ------------------- -------------------');
       return await syncRelationships()
     })

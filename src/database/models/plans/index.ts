@@ -55,8 +55,8 @@ export const Plans = db.define<PlanModel>('Plan', {
   },
 }, {
   tableName: 'plans',
-  timestamps: false, // No timestamps for this table
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const PlansSetup = {

@@ -58,8 +58,8 @@ export const Neighborhoods = db.define<NeighborhoodModel>('Neighborhood', {
   },
 }, {
   tableName: 'neighborhoods',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const NeighborhoodsSetup = {

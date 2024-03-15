@@ -39,8 +39,8 @@ export const Roles = db.define<RolesModel>('Roles', {
   },
 }, {
   tableName: 'roles',
+  collate: 'utf8_unicode_ci',
   timestamps: false,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
 });
 
 export const RolesSetup = {

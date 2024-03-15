@@ -186,10 +186,12 @@ export const Properties = db.define<PropertyModel>('Property', {
   exclusividadePeriodoInicio: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: null
   },
   exclusividadePeriodoFim: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: null
   },
   finalidade: {
     type: DataTypes.STRING,
@@ -210,10 +212,12 @@ export const Properties = db.define<PropertyModel>('Property', {
   aluguelPeriodoInicio: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: null
   },
   aluguelPeriodoFim: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: null
   },
   dormitorio: {
     type: DataTypes.STRING,
@@ -274,10 +278,12 @@ export const Properties = db.define<PropertyModel>('Property', {
   dataAgenciamento: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: null
   },
   dataVenda: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: null
   },
   apNomeCondominio: {
     type: DataTypes.STRING,
@@ -508,8 +514,8 @@ export const Properties = db.define<PropertyModel>('Property', {
   },
 }, {
   tableName: 'properties',
-  timestamps: false, // No timestamps for this table
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const PropertiesSetup = {

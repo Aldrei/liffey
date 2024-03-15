@@ -41,8 +41,8 @@ export const States = db.define<StatesModel>('States', {
   },
 }, {
   tableName: 'states',
+  collate: 'utf8_unicode_ci',
   timestamps: false,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
 });
 
 export const StatesSetup = {

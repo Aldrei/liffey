@@ -44,8 +44,8 @@ export const Themes = db.define<ThemesModel>('Themes', {
   },
 }, {
   tableName: 'themes',
+  collate: 'utf8_unicode_ci',
   timestamps: false,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
 });
 
 export const ThemesSetup = {

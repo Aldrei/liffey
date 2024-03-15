@@ -24,7 +24,6 @@ export const Migration = db.define<MigrationModel>('Migration', {
   },
 }, {
   tableName: 'migrations',
+  collate: 'utf8_unicode_ci',
   timestamps: false,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
-  // primaryKey: true,
 });

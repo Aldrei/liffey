@@ -36,8 +36,8 @@ export const RoleUser = db.define<RoleUserModel>('RoleUser', {
   },
 }, {
   tableName: 'role_user',
+  collate: 'utf8_unicode_ci',
   timestamps: false,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
 });
 
 export const RoleUserSetup = {

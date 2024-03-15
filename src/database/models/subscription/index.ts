@@ -56,8 +56,8 @@ export const Subscriptions = db.define<SubscriptionsModel>('Subscriptions', {
   },
 }, {
   tableName: 'subscriptions',
+  collate: 'utf8_unicode_ci',
   timestamps: false,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
 });
 
 export const SubscriptionsSetup = {

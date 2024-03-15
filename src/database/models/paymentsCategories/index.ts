@@ -34,8 +34,8 @@ export const PaymentsCategories = db.define<PaymentsCategoriesModel>('PaymentsCa
   },
 }, {
   tableName: 'payments_categories',
-  timestamps: false, // No timestamps for this table
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const PaymentsCategoriesSetup = {

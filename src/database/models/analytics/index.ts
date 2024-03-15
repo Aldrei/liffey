@@ -64,9 +64,8 @@ export const Analytics = db.define<AnalyticsModel>('Analytics', {
   },
 }, {
   tableName: 'analytics',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const AnalyticsSetup = {

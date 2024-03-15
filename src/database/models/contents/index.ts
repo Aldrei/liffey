@@ -53,8 +53,8 @@ export const Contents = db.define<ContentModel>('Content', {
   },
 }, {
   tableName: 'contents',
-  timestamps: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const ContentsSetup = {

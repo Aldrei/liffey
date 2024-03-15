@@ -66,9 +66,9 @@ export const Users = db.define<UsersModel>('Users', {
   },
 }, {
   tableName: 'users',
-  timestamps: false,
   paranoid: true,
-  collate: 'utf8_unicode_ci', // Add collate at the table level
+  collate: 'utf8_unicode_ci',
+  timestamps: false,
 });
 
 export const UsersSetup = {
