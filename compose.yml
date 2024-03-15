@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+
+  mysql:
+    container_name: db
+    image: mysql:8.0-debian
+    restart: always
+    tty: true
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - mysql:/var/lib/mysql
+      - ./src/database/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+    networks:
+      - imob-api-express_default
+    ports:
+      - 3306:3306
+
+  node:
+    container_name: api
+    image: node:20-alpine
+    tty: true
+    networks:
+      - imob-api-express_default
+    ports:
+      - 3000:3000
+    volumes:
+      - type: bind
+        source: ./
+        target: /app
+    depends_on:
+      mysql:
+        condition: service_started
+    
+volumes:
+  mysql:
+
+networks:
+  imob-api-express_default:
+    external: true
