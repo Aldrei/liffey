@@ -28,7 +28,13 @@ npm run `dev:tsx
 npm run db:reset
 
 # Inserting data from dump works well(the dump should be in invisible columns mode to avoid errors about columns name changed). Remember that some tables was renamed, read src/database/docker-entrypoint-initdb.d/CHANGELOG.md
+# The script db:insert call the docker-entrypoint-initdb.d/entrypoint.sh, so run it directly in your machine won't work.
 npm run db:insert
 ```
+
+## Docker
+
+Read compose.yml to understand.
+The script db:insert call the docker-entrypoint-initdb.d/entrypoint.sh, so run it directly in your machine won't work.
 
 ### So far, so good!
