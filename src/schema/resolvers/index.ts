@@ -1,4 +1,4 @@
-import { User } from "@/database/create";
+import { Users } from "@/database/models";
 
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
@@ -10,7 +10,7 @@ const resolvers = {
       try {
         const attrs = fields || ['id', 'firstName', 'lastName', 'username', 'email']
 
-        const dataUsers = await User.findAll({
+        const dataUsers = await Users.findAll({
           attributes: attrs
         })
 
@@ -24,7 +24,7 @@ const resolvers = {
   Mutation: {
     CreateUser: async (_, { input }) => {
       try {
-        const newUser = await User.create(input)
+        const newUser = await Users.create(input)
         return newUser
       } catch (error) {
         console.log(error);
