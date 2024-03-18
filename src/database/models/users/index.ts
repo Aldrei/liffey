@@ -89,5 +89,3 @@ export const UsersSetup = {
     `, { raw: true })
   }
 }
-
-// No foreign key associations specified in the provided SQL
