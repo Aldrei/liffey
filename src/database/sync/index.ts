@@ -1,3 +1,4 @@
+import ENV from '@/config';
 import db from '@/database/instance';
 import { syncRelationships } from '@/database/sync/relationships';
 import { syncTables } from '@/database/sync/tables';
@@ -13,19 +14,19 @@ export const resetDatabase = async () => {
       console.log('------------------- ------------------- -------------------');
       console.log('------------------- DROP DATABASE -------------------');
       console.log('------------------- ------------------- -------------------');
-      return await db.query('DROP DATABASE IF EXISTS IMOB')
+      return await db.query(`DROP DATABASE IF EXISTS ${ENV.DB_NAME}`)
     })
     .then(async () => {
       console.log('------------------- ------------------- -------------------');
       console.log('------------------- CREATING DATABASE -------------------');
       console.log('------------------- ------------------- -------------------');
-      return await db.query('CREATE DATABASE IF NOT EXISTS IMOB')
+      return await db.query(`CREATE DATABASE IF NOT EXISTS ${ENV.DB_NAME}`)
     })
     .then(async () => {
       console.log('------------------- ------------------- -------------------');
       console.log('------------------- USING DATABASE -------------------');
       console.log('------------------- ------------------- -------------------');
-      return await db.query('USE IMOB')
+      return await db.query(`USE ${ENV.DB_NAME}`)
     })
     .then(async () => {
       console.log('------------------- ------------------- -------------------');
