@@ -1,6 +1,8 @@
+import { NodeEnv } from "@/config/types";
 import dotenv from "dotenv";
 
-export interface ProcessEnv {
+export interface IProcessEnv {
+  NODE_ENV: NodeEnv
   DB_SERVICE: string
   DB_USER: string
   DB_PASS: string
@@ -10,6 +12,6 @@ export interface ProcessEnv {
 }
 
 dotenv.config()
-const ENV = process.env as unknown as ProcessEnv
+const ENV = process.env as unknown as IProcessEnv
 
 export default ENV
