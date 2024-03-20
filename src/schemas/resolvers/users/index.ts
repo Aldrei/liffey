@@ -2,13 +2,14 @@ import { Users } from "@/database/models";
 
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
-const resolvers = {
+const usersResolver = {
   Query: {
-    users: async (_: any,
+    users: async (
+      _: any,
       { fields }: any
     ) => {
       try {
-        const attrs = fields || ['id', 'firstName', 'lastName', 'username', 'email']
+        const attrs = fields || ['id', 'name', 'email']
 
         const dataUsers = await Users.findAll({
           attributes: attrs
@@ -34,4 +35,4 @@ const resolvers = {
   }
 };
 
-export { resolvers };
+export { usersResolver };

@@ -1,4 +1,4 @@
-export const helloWorld = () => console.log('>>> Hello world <<<');
+import ENV from "@/config";
+import { NodeEnv } from "@/config/types";
 
-const helloWorldDefault = () => console.log('>>> Hello world DEFAULT <<<');
-export default helloWorldDefault
+export const isDev = (): boolean => ENV.NODE_ENV === NodeEnv.DEV 
