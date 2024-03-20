@@ -1,12 +1,11 @@
-const typeDefs = `#graphql
+
+const userTypeDefs = `#graphql
   ##
   # Types
   ##
   type User {
     id: ID!
-    firstName: String!
-    lastName: String!
-    username: String!
+    name: String!
     email: String!
   }
 
@@ -14,9 +13,7 @@ const typeDefs = `#graphql
   # Inputs
   ##
   input CreateUserInput {
-    firstName: String!
-    lastName: String!
-    username: String!
+    name: String!
     email: String!
   }
 
@@ -26,9 +23,7 @@ const typeDefs = `#graphql
   type Query {
     users(
       id: ID,
-      firstName: String,
-      lastName: String,
-      username: String,
+      name: String,
       email: String,
       fields: [String!]
     ): [User]
@@ -42,4 +37,4 @@ const typeDefs = `#graphql
   }
 `;
 
-export { typeDefs };
+export default userTypeDefs;
