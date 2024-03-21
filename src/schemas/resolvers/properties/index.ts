@@ -1,12 +1,12 @@
-import { Properties } from "@/database/models";
+import { Clients, Properties } from "@/database/models";
 
 const propertiesResolver = {
   name: 'Properties Resolver',
   Query: {
     findProperty: async (
       _: any,
-      { id },
-      _ctx,
+      { domain, id },
+      ctx,
       info
     ) => {
       try {
@@ -15,8 +15,18 @@ const propertiesResolver = {
           return acc;
         }, {}))
 
+        const clientResult = await Clients.findOne({
+          where: {
+            domain: domain
+          },
+          attributes: ['id', 'domain'],
+        })
+
+        if (!clientResult) throw Error(`You don't have permission.`);
+
         const result = await Properties.findOne({
           where: {
+            client_id: clientResult.id,
             id: id
           },
           attributes: requestedFields
@@ -25,6 +35,7 @@ const propertiesResolver = {
         return result
       } catch (error) {
         console.log(error);
+        return error
       }
     }
   }
