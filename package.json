@@ -3,8 +3,8 @@
     "compile": "tspc",
     "prod:tspc": "npm run compile && node ./dist/index.js",
     "dev:tsx": "tsx watch --ignore ./src/index.ts ./src/index.ts",
-    "db:reset": "tsx src/scripts/database/reset.ts",
-    "db:insert": "./src/scripts/database/insert.sh",
+    "db:reset": "sh ./src/scripts/database/reset.sh",
+    "db:insert": "sh ./src/scripts/database/insert.sh",
     "test:jest": "jest",
     "test:jest-coverage": "jest --coverage"
   },
