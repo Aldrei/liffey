@@ -19,8 +19,6 @@ import { isDev } from '@/helpers';
 
 (globalThis as any).__DEV__ = isDev();
 
-const PORT = 3001
-
 /**
  * Crate Express server with GraphQL Apollo Server.
 */
@@ -58,9 +56,9 @@ const starter = async () => {
 }
 starter()
 
-const listen = async () => await new Promise<void>((resolve) => httpServer.listen({ port: PORT }, resolve))
+const listen = async () => await new Promise<void>((resolve) => httpServer.listen({ port: ENV.APP_PORT }, resolve))
 listen()
 
 
 console.log(`Running in ${ENV.NODE_ENV} mode(globalThis.__DEV__: ${globalThis.__DEV__})`);
-console.log(`🚀 Server ready at http://localhost:${PORT}/graphql`);
+console.log(`🚀 Server ready at http://localhost:${ENV.APP_PORT}/graphql`);

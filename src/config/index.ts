@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 
 export interface IProcessEnv {
   NODE_ENV: NodeEnv
+  APP_PORT: number
   DB_SERVICE: string
   DB_USER: string
   DB_PASS: string
