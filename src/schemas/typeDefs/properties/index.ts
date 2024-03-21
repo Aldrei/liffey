@@ -107,7 +107,7 @@ const propertyTypeDef = `#graphql
   # Queries
   ##
   type Query {
-    findProperty(id: ID!): Property
+    findProperty(id: ID!, domain: String): Property
   }
 `
 

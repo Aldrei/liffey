@@ -8,17 +8,17 @@ export interface IClient {
   user_id: number;
   city_id?: number | null;
   neighborhood_id?: number | null;
-  pay_last_name: string;
-  pay_first_name: string;
-  pay_cnpj: string;
-  pay_cpf?: string | null;
+  last_name_for_payment: string;
+  first_name_for_payment: string;
+  cnpj_for_payment: string;
+  cpf_for_payment?: string | null;
   theme_id?: number | null;
   palette_id?: number | null;
-  endereco: string;
+  address: string;
   ssl: boolean;
-  dominio?: string | null;
-  nome: string;
-  abbr: string;
+  domain?: string | null;
+  name: string;
+  abbreviation: string;
   creci: string;
   phone1: string;
   phone2: string;
@@ -26,7 +26,7 @@ export interface IClient {
   email1: string;
   email2: string;
   email3: string;
-  whats: string;
+  whatsapp: string;
   facebook: string;
   instagram: string;
   youtube: string;
@@ -35,7 +35,7 @@ export interface IClient {
   logo: string;
   icon: string;
   favicon: string;
-  marcadagua?: string | null;
+  watermark?: string | null;
   map: string;
   page_home: boolean;
   page_about: boolean;
@@ -70,19 +70,19 @@ export const Clients = db.define<ClientModel>('Client', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
   },
-  pay_last_name: {
+  last_name_for_payment: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  pay_first_name: {
+  first_name_for_payment: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  pay_cnpj: {
+  cnpj_for_payment: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  pay_cpf: {
+  cpf_for_payment: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -94,7 +94,7 @@ export const Clients = db.define<ClientModel>('Client', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
   },
-  endereco: {
+  address: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -102,15 +102,15 @@ export const Clients = db.define<ClientModel>('Client', {
     type: DataTypes.BOOLEAN,
     defaultValue: false,
   },
-  dominio: {
+  domain: {
     type: DataTypes.STRING,
     allowNull: true,
   },
-  nome: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  abbr: {
+  abbreviation: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -142,7 +142,7 @@ export const Clients = db.define<ClientModel>('Client', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  whats: {
+  whatsapp: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -178,7 +178,7 @@ export const Clients = db.define<ClientModel>('Client', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  marcadagua: {
+  watermark: {
     type: DataTypes.STRING,
     allowNull: true,
   },
@@ -248,7 +248,7 @@ export const ClientsSetup = {
     // Database level.
     await db.query(`
       ALTER TABLE clients
-      ADD UNIQUE KEY clients_dominio_unique (dominio),
+      ADD UNIQUE KEY clients_domain_unique (domain),
       ADD KEY clients_user_id_foreign (user_id),
       ADD KEY clients_city_id_foreign (city_id),
       ADD KEY clients_neighborhood_id_foreign (neighborhood_id),
