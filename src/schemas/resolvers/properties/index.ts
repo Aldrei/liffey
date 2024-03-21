@@ -27,6 +27,7 @@ const propertiesResolver = {
         const result = await Properties.findOne({
           where: {
             client_id: clientResult.id,
+            publish_property_website: 1,
             id: id
           },
           attributes: requestedFields
