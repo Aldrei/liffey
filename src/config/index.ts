@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 
 export interface IProcessEnv {
   NODE_ENV: NodeEnv
+  APP_PROTOCOL: 'http://' | 'https://'
+  APP_HOST: string
   APP_PORT: number
   DB_SERVICE: string
   DB_USER: string
@@ -10,6 +12,7 @@ export interface IProcessEnv {
   DB_HOST: string
   DB_PORT: string
   DB_NAME: string
+  CORS_DOMAINS: string
 }
 
 dotenv.config()

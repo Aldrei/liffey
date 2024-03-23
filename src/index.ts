@@ -4,7 +4,7 @@ import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHt
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import http from 'http';
 import morgan from 'morgan';
 
@@ -19,7 +19,7 @@ import * as userRoutes from '@/routes/user.route';
 
 /** Check Environment */
 import ENV from '@/config';
-import { isDev } from '@/helpers';
+import { getLocalhost, isDev, isGqlReferer } from '@/helpers';
 import path from 'path';
 
 (globalThis as any).__DEV__ = isDev();
@@ -44,6 +44,32 @@ accessLogStream.on('error', (err) => {
 
 app.use(morgan('common', { stream: accessLogStream }))
 
+/**
+ * Set CORS.
+*/
+app.use(cors())
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  const { originalUrl } = req
+
+  if (originalUrl !== '/graphql')
+    return res.status(401).send({ error: `Interface unauthorized.` })
+
+  const { origin, referer } = req.headers
+
+  const DOMAINS = ENV.CORS_DOMAINS.split(',') as string[]
+  if (isDev()) DOMAINS.push(getLocalhost())
+
+  if (isGqlReferer(referer) && !DOMAINS.includes(origin)) {
+    return res.status(401).json({ error: 'Forbidden. Origin unauthorized for this GraphQL referer.' })
+  }
+
+  res.header('Access-Control-Allow-Origin', origin)
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+  return next()
+})
+
 const httpServer = http.createServer(app);
 const server = new ApolloServer<MyContext>({
   typeDefs,
@@ -51,12 +77,13 @@ const server = new ApolloServer<MyContext>({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
+
+/**
+ * Set GraphQL server.
+*/
 const starter = async () => {
   await server.start()
 
-  /**
-   * Routes and Middlewares.
-  */
   app.use(bodyParser.json())
 
   app.use(
@@ -77,5 +104,5 @@ listen()
 
 
 console.log(`Running in ${ENV.NODE_ENV} mode(globalThis.__DEV__: ${globalThis.__DEV__})`);
-console.log(`🚀 Server ready at http://localhost:${ENV.APP_PORT}/graphql`);
+console.log(`🚀 Server ready at http://${ENV.APP_HOST}:${ENV.APP_PORT}/graphql`);
 
