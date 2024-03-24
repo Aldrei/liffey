@@ -51,11 +51,12 @@ export const Cities = db.define<CityModel>('City', {
 
 export const CitiesSetup = {
   syncTable: async () => await Cities.sync({ force: true }),
-  syncRelationships: async () => {
+  syncAssociations: async () => {
     // Application level.
     Cities.belongsTo(Clients, { foreignKey: 'client_id', onDelete: 'CASCADE' });
     Cities.belongsTo(States, { foreignKey: 'state_id', onDelete: 'CASCADE' });
-
+  },
+  syncRelationships: async () => {
     // Database level.
     await db.query(`
       ALTER TABLE cities

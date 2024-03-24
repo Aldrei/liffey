@@ -1,6 +1,7 @@
 // Import Sequelize and necessary types
 import db from '@/database/instance';
 import { DataTypes, Model } from 'sequelize';
+import { Properties } from '../properties';
 
 // Define the interface for the photos model
 export interface IPhoto {
@@ -78,10 +79,12 @@ export const Photos = db.define<PhotoModel>('Photo', {
 
 export const PhotosSetup = {
   syncTable: async () => await Photos.sync({ force: true }),
-  syncRelationships: async () => {
+  syncAssociations: async () => {
     // Application level.
-    Photos.belongsTo(db.models.Property, { foreignKey: 'property_id', onDelete: 'CASCADE' });
-
+    Photos.belongsTo(Properties, { foreignKey: 'property_id', onDelete: 'CASCADE' });
+    Properties.hasMany(Photos, { foreignKey: 'property_id' })
+  },
+  syncRelationships: async () => {
     // Database level.
     await db.query(`
       ALTER TABLE photos

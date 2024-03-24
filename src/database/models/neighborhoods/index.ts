@@ -37,12 +37,12 @@ export const Neighborhoods = db.define<NeighborhoodModel>('Neighborhood', {
     type: DataTypes.STRING, // Preserved
     allowNull: false,
   },
-  idCidade: {
-    type: DataTypes.STRING, // Preserved
-    allowNull: false,
-  },
   name: {
     type: DataTypes.STRING,
+    allowNull: false,
+  },
+  idCidade: {
+    type: DataTypes.STRING, // Preserved
     allowNull: false,
   },
   created_at: {
@@ -64,11 +64,12 @@ export const Neighborhoods = db.define<NeighborhoodModel>('Neighborhood', {
 
 export const NeighborhoodsSetup = {
   syncTable: async () => await Neighborhoods.sync({ force: true }),
-  syncRelationships: async () => {
+  syncAssociations: async () => {
     // Application level.
     Neighborhoods.belongsTo(Cities, { foreignKey: 'city_id', onDelete: 'CASCADE' });
     Neighborhoods.belongsTo(Clients, { foreignKey: 'client_id', onDelete: 'CASCADE' });
-
+  },
+  syncRelationships: async () => {
     // Database level.
     await db.query(`
       ALTER TABLE neighborhoods

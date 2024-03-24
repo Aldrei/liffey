@@ -57,6 +57,14 @@ export const Videos = db.define<VideosModel>('Videos', {
 
 export const VideosSetup = {
   syncTable: async () => await Videos.sync({ force: true }),
+  syncAssociations: async () => {
+    // Application level.
+    Videos.belongsTo(Properties, {
+      foreignKey: 'property_id',
+      onDelete: 'CASCADE',
+    });
+    Properties.hasMany(Videos, { foreignKey: 'property_id' })
+  },
   syncRelationships: async () => {
     // Application level.
     Videos.belongsTo(Properties, {
