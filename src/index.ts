@@ -15,10 +15,12 @@ import { resolvers } from '@/schemas/resolvers';
 import { typeDefs } from '@/schemas/typeDefs';
 
 /** Routes */
+import * as testRoutes from '@/routes/test.route';
 import * as userRoutes from '@/routes/user.route';
 
 /** Check Environment */
 import ENV from '@/config';
+import { syncAssociations } from '@/database/sync/associations';
 import { getLocalhost, isDev, isGqlReferer } from '@/helpers';
 import path from 'path';
 
@@ -96,6 +98,9 @@ const starter = async () => {
   );
 
   app.use(userRoutes.default)
+  app.use(testRoutes.default)
+
+  syncAssociations()
 }
 starter()
 
@@ -105,4 +110,3 @@ listen()
 
 console.log(`Running in ${ENV.NODE_ENV} mode(globalThis.__DEV__: ${globalThis.__DEV__})`);
 console.log(`🚀 Server ready at http://${ENV.APP_HOST}:${ENV.APP_PORT}/graphql`);
-

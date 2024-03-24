@@ -521,7 +521,7 @@ export const Properties = db.define<PropertyModel>('Property', {
 
 export const PropertiesSetup = {
   syncTable: async () => await Properties.sync({ force: true }),
-  syncRelationships: async () => {
+  syncAssociations: async () => {
     // Application level.
     Properties.belongsTo(Employees, { foreignKey: 'agent_id', onDelete: 'SET NULL' });
     Properties.belongsTo(Employees, { foreignKey: 'broker_id', onDelete: 'SET NULL' });
@@ -529,7 +529,8 @@ export const PropertiesSetup = {
     Properties.belongsTo(Clients, { foreignKey: 'client_id', onDelete: 'CASCADE' });
     Properties.belongsTo(Neighborhoods, { foreignKey: 'neighborhood_id', onDelete: 'SET NULL' });
     Properties.belongsTo(Owners, { foreignKey: 'owner_id', onDelete: 'SET NULL' });
-
+  },
+  syncRelationships: async () => {
     // Database level.
     await db.query(`
       ALTER TABLE properties
