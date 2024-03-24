@@ -2,6 +2,48 @@ const propertyTypeDef = `#graphql
   ##
   # Types
   ##
+  type City {
+    id: Int
+    client_id: Int
+    state_id: Int!
+    name: String!
+    created_at: Date
+    updated_at: Date
+  }
+
+  type Neighborhood {
+    id: Int
+    client_id: Int
+    city_id: Int
+    name: String!
+    created_at: Date
+    updated_at: Date
+  }
+
+  type Photo {
+    id: Int
+    property_id: Int!
+    type: String
+    src: String!
+    thumb: String
+    main_media: String
+    caption: String
+    order: Int
+    rotate: Int
+    created_at: Date
+    updated_at: Date
+  }
+
+  type Video {
+    id: Int!
+    property_id: Int!
+    src: String!
+    caption: String
+    order: Int
+    created_at: Date
+    updated_at: Date
+  }
+
   type Property {
     id: ID!
     client_id: Int!
@@ -101,6 +143,11 @@ const propertyTypeDef = `#graphql
     last_transaction_id: String
     created_at: Date
     updated_at: Date
+    # Nested data
+    City: City
+    Neighborhood: Neighborhood
+    Photos: [Photo]
+    Videos: [Video]
   }
 
   ##

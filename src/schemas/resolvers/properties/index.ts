@@ -1,4 +1,4 @@
-import { Clients, Properties } from "@/database/models";
+import { Cities, Clients, Neighborhoods, Photos, Properties, Videos } from "@/database/models";
 
 const propertiesResolver = {
   name: 'Properties Resolver',
@@ -6,12 +6,14 @@ const propertiesResolver = {
     findProperty: async (
       _: any,
       { domain, id },
-      ctx,
+      _ctx,
       info
     ) => {
       try {
+        const excludes = ['City', 'Neighborhood', 'Photos', 'Videos']
+
         const requestedFields = Object.keys(info.fieldNodes[0].selectionSet.selections.reduce((acc, curr) => {
-          acc[curr.name.value] = true;
+          if (!excludes.includes(curr.name.value)) acc[curr.name.value] = true;
           return acc;
         }, {}))
 
@@ -30,7 +32,20 @@ const propertiesResolver = {
             publish_property_website: 1,
             id: id
           },
-          attributes: requestedFields
+          attributes: requestedFields,
+          include: [{
+            model: Cities,
+            required: false
+          }, {
+            model: Neighborhoods,
+            required: false
+          }, {
+            model: Photos,
+            required: false
+          }, {
+            model: Videos,
+            required: false
+          }]
         })
 
         return result
