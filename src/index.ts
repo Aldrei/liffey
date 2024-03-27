@@ -9,6 +9,7 @@ import http from 'http';
 import morgan from 'morgan';
 
 import fs from 'fs';
+import path from 'path';
 
 /** GraphQL */
 import { resolvers } from '@/schemas/resolvers';
@@ -22,7 +23,7 @@ import * as userRoutes from '@/routes/user.route';
 import ENV from '@/config';
 import { syncAssociations } from '@/database/sync/associations';
 import { getLocalhost, isDev, isGqlReferer } from '@/helpers';
-import path from 'path';
+import { analyzeTokenService } from '@/services/auth';
 
 (globalThis as any).__DEV__ = isDev();
 
@@ -52,9 +53,12 @@ app.use(morgan('common', { stream: accessLogStream }))
 app.use(cors())
 
 app.use((req: Request, res: Response, next: NextFunction) => {
+  // Bye
+  if (isDev()) return next()
+
   const { originalUrl } = req
 
-  if (originalUrl !== '/graphql')
+  if (originalUrl !== ENV.GQL_ENDPOINT)
     return res.status(401).send({ error: `Interface unauthorized.` })
 
   const { origin, referer } = req.headers
@@ -70,6 +74,26 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
   return next()
+})
+
+app.use(async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Bye
+    if (isDev()) return next()
+
+    const { originalUrl } = req
+    const { authorization } = req.headers
+
+    if (originalUrl === ENV.GQL_ENDPOINT)
+      return next()
+
+    await analyzeTokenService(authorization)
+
+    return next()
+  } catch (error) {
+    console.log(error);
+    return res.status(401).send({ error: `Forbidden. Unauthorized token.` })
+  }
 })
 
 const httpServer = http.createServer(app);
@@ -89,11 +113,11 @@ const starter = async () => {
   app.use(bodyParser.json())
 
   app.use(
-    '/graphql',
+    `${ENV.GQL_ENDPOINT}`,
     cors<cors.CorsRequest>(),
     express.json(),
     expressMiddleware(server, {
-      context: async ({ req }) => ({ token: req.headers.token }),
+      context: async ({ req }) => ({ token: req.headers.authorization }),
     }),
   );
 
@@ -109,4 +133,4 @@ listen()
 
 
 console.log(`Running in ${ENV.NODE_ENV} mode(globalThis.__DEV__: ${globalThis.__DEV__})`);
-console.log(`🚀 Server ready at http://${ENV.APP_HOST}:${ENV.APP_PORT}/graphql`);
+console.log(`🚀 GQL Server ready at http://${ENV.APP_HOST}:${ENV.APP_PORT}${ENV.GQL_ENDPOINT}`);
