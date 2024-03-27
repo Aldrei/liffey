@@ -1,3 +1,5 @@
+export * from '@/database/models/AuthClient'
+export * from '@/database/models/AuthToken'
 export * from '@/database/models/analytics'
 export * from '@/database/models/banners'
 export * from '@/database/models/cities'

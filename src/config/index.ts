@@ -13,6 +13,8 @@ export interface IProcessEnv {
   DB_PORT: string
   DB_NAME: string
   CORS_DOMAINS: string
+  JWT_SECRET: string
+  GQL_ENDPOINT: string
 }
 
 dotenv.config()

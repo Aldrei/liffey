@@ -1,4 +1,4 @@
-import { AnalyticsSetup, BannersSetup, CitiesSetup, ClientsSetup, ContentsSetup, DomainsSetup, EmailsSetup, EmployeesEmailsSetup, EmployeesSetup, MessagesSetup, NeighborhoodsSetup, OrdersSetup, OwnersSetup, PalettesSetup, PasswordsResetsSetup, PaymentsCategoriesSetup, PaymentsSetup, PermissionsSetup, PhotosSetup, PlansSetup, PropertiesAgenciesSetup, PropertiesSetup, ProspectsSetup, ReceivablesCategoriesSetup, ReceivablesSetup, RolePermissionSetup, RoleUserSetup, RolesSetup, StatesSetup, SubscriptionsSetup, ThemesSetup, UsersSetup, VideosSetup } from '@/database/models';
+import { AnalyticsSetup, AuthClientsSetup, AuthTokensSetup, BannersSetup, CitiesSetup, ClientsSetup, ContentsSetup, DomainsSetup, EmailsSetup, EmployeesEmailsSetup, EmployeesSetup, MessagesSetup, NeighborhoodsSetup, OrdersSetup, OwnersSetup, PalettesSetup, PasswordsResetsSetup, PaymentsCategoriesSetup, PaymentsSetup, PermissionsSetup, PhotosSetup, PlansSetup, PropertiesAgenciesSetup, PropertiesSetup, ProspectsSetup, ReceivablesCategoriesSetup, ReceivablesSetup, RolePermissionSetup, RoleUserSetup, RolesSetup, StatesSetup, SubscriptionsSetup, ThemesSetup, UsersSetup, VideosSetup, } from '@/database/models';
 
 export const syncRelationships = async () => {
   try {
@@ -35,6 +35,8 @@ export const syncRelationships = async () => {
     await RoleUserSetup.syncRelationships()
     await RolePermissionSetup.syncRelationships()
     await VideosSetup.syncRelationships()
+    await AuthTokensSetup.syncRelationships()
+    await AuthClientsSetup.syncRelationships()
   } catch (error) {
     console.error(error);
   }

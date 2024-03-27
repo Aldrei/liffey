@@ -1,32 +1,51 @@
-import { Cities, Neighborhoods, Photos, Properties, Videos } from "@/database/models";
+import ENV from "@/config";
+import { AuthTokens } from "@/database/models/AuthToken";
 import { router } from "@/express.instance";
 import { Request, Response } from "express";
 
-router.get('/properties/:id', async (req: Request, res: Response) => {
-  const { id } = req.params
+import jwt from 'jsonwebtoken';
 
-  const result = await Properties.findOne({
-    where: {
-      id: Number(id)
-    },
-    include: [{
-      model: Cities,
-      required: false
-    }, {
-      model: Neighborhoods,
-      required: false
-    }, {
-      model: Photos,
-      required: false
-    }, {
-      model: Videos,
-      required: false
-    }]
-  })
+router.get('/token/encrypt', async (req: Request, res: Response) => {
+  try {
+    const token = jwt.sign('bla bla bla', ENV.JWT_SECRET, { algorithm: 'HS256' })
 
-  return res.send({
-    data: result,
-  });
+    return res.send({
+      data: token,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.send({
+      message: error?.message,
+    })
+  }
+});
+
+router.get('/token/decrypt', async (req: Request, res: Response) => {
+  try {
+    const { token } = req.body
+
+    const decrypted = jwt.verify(token, ENV.JWT_SECRET)
+
+    return res.send({
+      data: decrypted,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.send({ message: error?.message })
+  }
+});
+
+router.get('/token/all', async (req: Request, res: Response) => {
+  try {
+    const result = await AuthTokens.findAll()
+
+    return res.send({
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.send({ message: error?.message })
+  }
 });
 
 export default router;
