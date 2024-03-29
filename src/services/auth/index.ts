@@ -15,12 +15,12 @@ export type ResolverAuthentication = (ctx: any, resolver: () => any) => Promise<
 
 export const resolverAuthentication: ResolverAuthentication = async (ctx: any, resolver: () => any) => {
   try {
-    // Bye
     if (!isDev()) {
       const tokenResult = await analyzeTokenService(ctx.token)
       if (tokenResult?.error) throw new Error(tokenResult.error);
     }
 
+    // Bye
     return resolver()
   } catch (error) {
     console.log(error);
