@@ -16,9 +16,8 @@ import { resolvers } from '@/schemas/resolvers';
 import { typeDefs } from '@/schemas/typeDefs';
 
 /** Routes */
-import * as passRoutes from '@/routes/api/auth';
-import * as testRoutes from '@/routes/test.route';
-import * as userRoutes from '@/routes/user.route';
+import { userRoutes } from '@/routes/api/rest/guard';
+import { tokenRoutes } from '@/routes/api/rest/public';
 
 /** Check Environment */
 import ENV from '@/config';
@@ -134,9 +133,8 @@ const starter = async () => {
     }),
   );
 
+  app.use(tokenRoutes.default)
   app.use(userRoutes.default)
-  app.use(testRoutes.default)
-  app.use(passRoutes.default)
 
   syncAssociations()
 }
