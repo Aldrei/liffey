@@ -23,17 +23,10 @@ import { tokenRoutes } from '@/routes/api/rest/public';
 import ENV from '@/config';
 import { syncAssociations } from '@/database/sync/associations';
 import { getLocalhost, isDev, isGqlReferer } from '@/helpers';
-import { analyzeTokenService } from '@/services/auth';
+import { validGuardRouteTokenService } from '@/services/auth';
 import rateLimit from 'express-rate-limit';
 
 (globalThis as any).__DEV__ = isDev();
-
-/**
- * Crate Express server with GraphQL Apollo Server.
-*/
-interface MyContext {
-  token?: String;
-}
 
 const app = express();
 
@@ -49,18 +42,16 @@ accessLogStream.on('error', (err) => {
 app.use(morgan('common', { stream: accessLogStream }))
 
 /**
- * Set CORS.
+ * Setup CORS.
 */
 app.use(cors())
 
+/**
+ * Authentication for GraphQL API.
+*/
 app.use((req: Request, res: Response, next: NextFunction) => {
   // Bye
-  if (isDev()) return next()
-
-  const { originalUrl } = req
-
-  if (originalUrl !== ENV.GQL_ENDPOINT)
-    return res.status(401).send({ error: `Interface unauthorized.` })
+  // if (isDev()) return next()
 
   const { origin, referer } = req.headers
 
@@ -77,10 +68,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   return next()
 })
 
+/**
+ * Authentication for REST API.
+*/
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   try {
     // Bye
-    if (isDev()) return next()
+    // if (isDev()) return next()
 
     const { originalUrl } = req
     const { authorization } = req.headers
@@ -88,15 +82,19 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
     if (originalUrl === ENV.GQL_ENDPOINT)
       return next()
 
-    await analyzeTokenService(authorization)
+    const result = await validGuardRouteTokenService(authorization)
+    if (result?.error) throw Error(result.error)
 
     return next()
   } catch (error) {
     console.log(error);
-    return res.status(401).send({ error: `Forbidden. Unauthorized token.` })
+    return res.status(401).send({ error: `Forbidden. ${error.message}` })
   }
 })
 
+/**
+ * Prevent rate limit.
+*/
 const limiter = rateLimit({
 	windowMs: ENV.RATE_LIMIT_WINDOW_TIME,
 	limit: ENV.RATE_LIMIT_REQUESTS,
@@ -108,6 +106,13 @@ const limiter = rateLimit({
 
 app.use(limiter)
 
+/**
+ * Setup server.
+*/
+interface MyContext {
+  token?: String;
+}
+
 const httpServer = http.createServer(app);
 const server = new ApolloServer<MyContext>({
   typeDefs,
@@ -115,10 +120,6 @@ const server = new ApolloServer<MyContext>({
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
-
-/**
- * Set GraphQL server.
-*/
 const starter = async () => {
   await server.start()
 
