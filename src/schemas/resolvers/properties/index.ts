@@ -1,5 +1,5 @@
 import { Cities, Clients, Neighborhoods, Photos, Properties, Videos } from "@/database/models";
-import { ResolverAuthentication, resolverAuthentication } from "@/services/auth";
+import { ResolverAuthentication, publicRouteResolver } from "@/services/auth";
 
 const propertiesResolver = {
   name: 'Properties Resolver',
@@ -9,7 +9,7 @@ const propertiesResolver = {
       attrs: any, 
       ctx: any,
       info: any
-    ) => resolverAuthentication(ctx, async () => {
+    ) => publicRouteResolver(ctx, async () => {
       const { id, domain } = attrs;
 
       const excludes = ['City', 'Neighborhood', 'Photos', 'Videos'];

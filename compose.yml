@@ -15,7 +15,7 @@ services:
     networks:
       - node-app
     ports:
-      - 3306:3306
+      - 3307:3306
 
   node:
     container_name: api
