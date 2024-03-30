@@ -25,6 +25,7 @@ import ENV from '@/config';
 import { syncAssociations } from '@/database/sync/associations';
 import { getLocalhost, isDev, isGqlReferer } from '@/helpers';
 import { analyzeTokenService } from '@/services/auth';
+import rateLimit from 'express-rate-limit';
 
 (globalThis as any).__DEV__ = isDev();
 
@@ -96,6 +97,17 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
     return res.status(401).send({ error: `Forbidden. Unauthorized token.` })
   }
 })
+
+const limiter = rateLimit({
+	windowMs: ENV.RATE_LIMIT_WINDOW_TIME,
+	limit: ENV.RATE_LIMIT_REQUESTS,
+	standardHeaders: ENV.RATE_LIMIT_HEADER,
+	legacyHeaders: ENV.RATE_LIMIT_LEGACY_HEADER,
+  statusCode: ENV.RATE_LIMIT_STATUS_CODE,
+  requestPropertyName: ENV.RATE_LIMIT_PROP_NAME
+})
+
+app.use(limiter)
 
 const httpServer = http.createServer(app);
 const server = new ApolloServer<MyContext>({
