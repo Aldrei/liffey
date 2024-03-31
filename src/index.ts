@@ -82,6 +82,8 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
     if (originalUrl === ENV.GQL_ENDPOINT)
       return next()
 
+    if (originalUrl === '/oauth/access_token') return next()
+
     const result = await validGuardRouteTokenService(authorization)
     if (result?.error) throw Error(result.error)
 
