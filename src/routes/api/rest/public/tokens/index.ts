@@ -11,14 +11,14 @@ router.post('/oauth/access_token', async (req: Request, res: Response) => {
 
     const user = await Users.findOne({
       where: { email: username },
-      attributes: ['password', 'email']
+      attributes: ['id', 'password', 'email']
     })
 
     const check = comparePass(password, user.password)
 
     if (!check) return res.status(401).send({ error: 'Forbidden. Username or password incorrect.' })
 
-    const token = jwt.sign({ email: username }, ENV.JWT_SECRET)
+    const token = jwt.sign({ id: user.id, email: username }, ENV.JWT_SECRET)
 
     res.send({
       token_type: "Bearer",
