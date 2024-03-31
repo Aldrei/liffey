@@ -1,6 +1,8 @@
 import { Clients, Employees, Permissions, Roles } from "@/database/models";
 import { clientParseEnToPt } from "@/database/parse/client";
+import { employeeParseEnToPt } from "@/database/parse/employee";
 import { transformClient } from "@/database/transformers/client";
+import { transformEmployee } from "@/database/transformers/employee";
 import { router } from "@/express.instance";
 import { extractUserFromToken } from "@/helpers/token";
 import { Request, Response } from "express";
@@ -20,21 +22,23 @@ router.get('/api/who-is-auth', async (req: Request, res: Response) => {
 
     // Transformed data
     const transformedClient = transformClient(client)
+    const transformedEmployee = transformEmployee(employee)
     
     const enDataFields = {
       client: {
         data: transformedClient
       },
       employee: {
-        data: employee
+        data: transformedEmployee
       },
       db_roles: roles,
       db_permissions: permissions
     }
 
-    // Translated data
+    // Translated fields
     if (fieldsLanguage !== 'EN') {
       enDataFields.client.data = clientParseEnToPt(transformedClient)
+      enDataFields.employee.data = employeeParseEnToPt(transformedEmployee)
     }
 
     return res.send(enDataFields)

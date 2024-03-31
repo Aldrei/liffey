@@ -7,6 +7,9 @@ export interface IProcessEnv {
   APP_PROTOCOL: 'http://' | 'https://'
   APP_HOST: string
   APP_PORT: number
+  CDN_PROTOCOL: 'http://' | 'https://'
+  CDN_HOST: string
+  CDN_PORT: number
   DB_SERVICE: string
   DB_USER: string
   DB_PASS: string
