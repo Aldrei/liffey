@@ -106,7 +106,7 @@ export interface IProperty {
 }
 
 // Define the Property model with the interface and extend Model
-interface PropertyModel extends Model<IProperty>, IProperty {}
+export interface PropertyModel extends Model<IProperty>, IProperty {}
 
 // Define the properties table
 export const Properties = db.define<PropertyModel>('Property', {

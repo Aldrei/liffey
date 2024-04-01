@@ -50,7 +50,7 @@ export interface IClient {
 }
 
 // Define the Clients model with the interface and extend Model
-interface ClientModel extends Model<IClient>, IClient {}
+export interface ClientModel extends Model<IClient>, IClient {}
 
 export const Clients = db.define<ClientModel>('Client', {
   id: {
