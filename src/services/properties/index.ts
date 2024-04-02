@@ -7,9 +7,9 @@ import { Request, Response } from 'express';
 
 import { Result, validationResult } from 'express-validator';
 
-const getNextCodeType = async (type: string): Promise<number> => {
+const getNextCodeType = async (type: string, client_id: number): Promise<number> => {
   try {
-    const max = await Properties.max('code_type', { where: { type } })
+    const max = await Properties.max('code_type', { where: { client_id, type } })
     return max !== null ? Number(max) + 1 : 1;
   } catch (error) {
     console.error('Error in getNextCodeType:', error);
@@ -29,7 +29,7 @@ export const validator = (body: any): Result => {
   return validationResult(body);
 }
 
-const prepareStore = (body: any): Partial<IProperty> => {
+const prepareStore = (body: any, client_id: number): Partial<IProperty> => {
   const inputs: Partial<IProperty> = propertyParsePayloadPtToEn(body)
 
   inputs.total_area = decimalBrToDb(body.areaTotal)
@@ -50,11 +50,8 @@ const prepareStore = (body: any): Partial<IProperty> => {
   inputs.exclusivity_start_period = dateBrToDb(body.exclusividadePeriodoInicio)
   inputs.exclusivity_end_period = dateBrToDb(body.exclusividadePeriodoFim)
 
-  // inputs.client_id = body.client.id
-  // inputs.code = body.client.property_count
-
   if (body.type) {
-    inputs.code_type = getNextCodeType(body.type) as unknown as number
+    inputs.code_type = getNextCodeType(body.type, client_id) as unknown as number
     inputs.code_pretty = makeCodePretty(body.type, inputs.code_type);
   }
 
@@ -63,7 +60,7 @@ const prepareStore = (body: any): Partial<IProperty> => {
 
 export const store = async (req: Request, res: Response): Promise<any> => {
   try {
-    const user = extractUserFromToken(req)
+    const { user } = extractUserFromToken(req)
     const client = await Clients.findOne({ where: { user_id: user.id } })
 
     const { body } = req
@@ -76,8 +73,8 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     if (!validatorResult.isEmpty())
       return res.status(202).json({ error: validatorResult.array() })
 
-    const inputs = prepareStore(body);
-    
+    const inputs = prepareStore(body, client.id);
+
     /**
      * Start transaction
     */
@@ -91,9 +88,28 @@ export const store = async (req: Request, res: Response): Promise<any> => {
      * Commit transaction
     */
 
-    res.status(200).json({ property: newProperty, message: 'Property created successfully' });
+    return res.status(200).json({ property: newProperty, message: 'Property created successfully' });
   } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const update = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { id } = req.params
+
+    const { client } = extractUserFromToken(req)
+
+    const property = await Properties.findOne({ where: { client_id: client.id, id } })
+
+    const propertyEnFields = propertyParsePayloadPtToEn(property)
+
+    property.update(propertyEnFields)
+
+    return res.status(200).json({ property: { data: property }, message: 'Property updated successfully', status: 200 });
+  } catch (error) {
+    console.error( error);
+    return res.status(500).json({ error: error.message });
   }
 }

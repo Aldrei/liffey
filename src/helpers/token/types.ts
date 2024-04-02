@@ -1,4 +1,10 @@
-export interface JWTData {
-  id: string
-  email: string
+
+export type JWTData = {
+  user: {
+    id: string
+    email: string
+  }
+  client: {
+    id: string
+  }
 }
