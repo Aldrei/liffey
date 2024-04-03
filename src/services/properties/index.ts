@@ -1,5 +1,5 @@
 import db from '@/database/instance';
-import { Clients, IProperty, Properties } from '@/database/models';
+import { Clients, IProperty, Properties, PropertyModel } from '@/database/models';
 import { propertyParsePayloadPtToEn } from '@/database/parse/property';
 import { dateBrToDb, decimalBrToDb, makeCodePretty } from '@/helpers';
 import { extractUserFromToken } from '@/helpers/token';
@@ -29,7 +29,7 @@ export const validator = (body: any): Result => {
   return validationResult(body);
 }
 
-const prepareStore = (body: any, client_id: number): Partial<IProperty> => {
+const prepareFieldsToCreateAndUpdate = (body: any): Partial<IProperty> => {
   const inputs: Partial<IProperty> = propertyParsePayloadPtToEn(body)
 
   inputs.total_area = decimalBrToDb(body.areaTotal)
@@ -50,9 +50,40 @@ const prepareStore = (body: any, client_id: number): Partial<IProperty> => {
   inputs.exclusivity_start_period = dateBrToDb(body.exclusividadePeriodoInicio)
   inputs.exclusivity_end_period = dateBrToDb(body.exclusividadePeriodoFim)
 
+  return inputs
+}
+
+const prepareFieldsToCreate = (body: any, client_id: number): Partial<IProperty> => {
+  let inputs: Partial<IProperty> = propertyParsePayloadPtToEn(body)
+
+  inputs = prepareFieldsToCreateAndUpdate(body)
+
   if (body.type) {
     inputs.code_type = getNextCodeType(body.type, client_id) as unknown as number
     inputs.code_pretty = makeCodePretty(body.type, inputs.code_type);
+  }
+
+  return inputs
+}
+
+const prepareFieldsToUpdate = async (body: any, client_id: number, property: PropertyModel): Promise<Partial<IProperty>> => {
+  let inputs: Partial<IProperty> = propertyParsePayloadPtToEn(body)
+
+  inputs = prepareFieldsToCreateAndUpdate(body)
+
+  if (inputs.type !== property.type || !inputs.code_type) {
+    if (inputs.type) {
+      inputs.code_type = await getNextCodeType(inputs.type, client_id);
+
+      const code_pretty = makeCodePretty(inputs.type, inputs.code_type);
+      inputs.code_pretty = code_pretty;
+    } 
+    
+    if (!inputs.type) {
+      inputs.type = null;
+      inputs.code_type = null;
+      inputs.code_pretty = null;
+    }
   }
 
   return inputs
@@ -73,7 +104,7 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     if (!validatorResult.isEmpty())
       return res.status(202).json({ error: validatorResult.array() })
 
-    const inputs = prepareStore(body, client.id);
+    const inputs = prepareFieldsToCreate(body, client.id);
 
     /**
      * Start transaction
@@ -98,16 +129,35 @@ export const store = async (req: Request, res: Response): Promise<any> => {
 export const update = async (req: Request, res: Response): Promise<any> => {
   try {
     const { id } = req.params
+    const { body } = req
+
+    const { client } = extractUserFromToken(req)
+
+    const validatorResult = validator(body)
+
+    if (!validatorResult.isEmpty())
+      return res.status(202).json({ error: validatorResult.array() })
+
+    const property = await Properties.findOne({ where: { client_id: client.id, id } })
+    const inputs = await prepareFieldsToUpdate(body, Number(client.id), property);
+    const updatedProperty = await property.update(inputs)
+
+    return res.status(200).json({ property: { data: updatedProperty }, message: 'Property updated successfully', status: 200 });
+  } catch (error) {
+    console.error( error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const detail = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { id } = req.params
 
     const { client } = extractUserFromToken(req)
 
     const property = await Properties.findOne({ where: { client_id: client.id, id } })
 
-    const propertyEnFields = propertyParsePayloadPtToEn(property)
-
-    property.update(propertyEnFields)
-
-    return res.status(200).json({ property: { data: property }, message: 'Property updated successfully', status: 200 });
+    return res.status(200).json({ property: { data: property } });
   } catch (error) {
     console.error( error);
     return res.status(500).json({ error: error.message });
