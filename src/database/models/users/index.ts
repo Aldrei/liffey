@@ -17,7 +17,7 @@ export interface IUser {
 }
 
 // Define the Users model with the interface and extend Model
-interface UsersModel extends Model<IUser>, IUser {}
+export interface UsersModel extends Model<IUser>, IUser {}
 
 // Define the users table
 export const Users = db.define<UsersModel>('Users', {

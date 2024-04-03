@@ -1,5 +1,5 @@
 import ENV from "@/config";
-import { AuthTokens, Users } from "@/database/models";
+import { AuthTokens, Clients, Users } from "@/database/models";
 import { router } from "@/express.instance";
 import { comparePass } from "@/helpers/pass";
 import { Request, Response } from "express";
@@ -14,11 +14,18 @@ router.post('/oauth/access_token', async (req: Request, res: Response) => {
       attributes: ['id', 'password', 'email']
     })
 
+    const client = await Clients.findOne({ where: { user_id: user.id } })
+
     const check = comparePass(password, user.password)
 
     if (!check) return res.status(401).send({ error: 'Forbidden. Username or password incorrect.' })
 
-    const token = jwt.sign({ id: user.id, email: username }, ENV.JWT_SECRET)
+    const token = jwt.sign({ user: {
+      id: user.id, 
+      email: username
+    }, client: {
+      id: client.id
+    }}, ENV.JWT_SECRET)
 
     res.send({
       token_type: "Bearer",

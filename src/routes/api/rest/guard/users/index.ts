@@ -11,7 +11,7 @@ router.get('/api/who-is-auth', async (req: Request, res: Response) => {
   try {
     const fieldsLanguage = req.header('fieldsLanguage')
 
-    const user = extractUserFromToken(req)
+    const { user } = extractUserFromToken(req)
 
     // Raw data
     const client = await Clients.findOne({ where: { user_id: user.id } })
