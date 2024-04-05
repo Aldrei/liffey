@@ -8,3 +8,5 @@ src/database/docker-entrypoint-initdb.d/*.sql
 src/_coverage
 
 src/logs/dev.log
+
+public/photos/*
