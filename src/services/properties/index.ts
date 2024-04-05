@@ -10,7 +10,7 @@ import { Result, validationResult } from 'express-validator';
 const getNextCodeType = async (type: string, client_id: number): Promise<number> => {
   try {
     const max = await Properties.max('code_type', { where: { client_id, type } })
-    return max !== null ? Number(max) + 1 : 1;
+    return max ? Number(max)+1 : 1;
   } catch (error) {
     console.error('Error in getNextCodeType:', error);
   }
@@ -53,14 +53,14 @@ const prepareFieldsToCreateAndUpdate = (body: any): Partial<IProperty> => {
   return inputs
 }
 
-const prepareFieldsToCreate = (body: any, client_id: number): Partial<IProperty> => {
+const prepareFieldsToCreate = async (body: any, client_id: number): Promise<Partial<IProperty>> => {
   let inputs: Partial<IProperty> = propertyParsePayloadPtToEn(body)
 
   inputs = prepareFieldsToCreateAndUpdate(body)
 
-  if (body.type) {
-    inputs.code_type = getNextCodeType(body.type, client_id) as unknown as number
-    inputs.code_pretty = makeCodePretty(body.type, inputs.code_type);
+  if (inputs.type) {
+    inputs.code_type = await getNextCodeType(inputs.type, client_id) as unknown as number
+    inputs.code_pretty = makeCodePretty(inputs.type, inputs.code_type);
   }
 
   return inputs
@@ -71,19 +71,19 @@ const prepareFieldsToUpdate = async (body: any, client_id: number, property: Pro
 
   inputs = prepareFieldsToCreateAndUpdate(body)
 
-  if (inputs.type !== property.type || !inputs.code_type) {
-    if (inputs.type) {
-      inputs.code_type = await getNextCodeType(inputs.type, client_id);
+  if (inputs.type && inputs.type !== property.type) {
+    inputs.code_type = await getNextCodeType(inputs.type, client_id) as unknown as number
+    inputs.code_pretty = makeCodePretty(inputs.type, inputs.code_type);
+  }
 
-      const code_pretty = makeCodePretty(inputs.type, inputs.code_type);
-      inputs.code_pretty = code_pretty;
-    } 
-    
-    if (!inputs.type) {
-      inputs.type = null;
-      inputs.code_type = null;
-      inputs.code_pretty = null;
-    }
+  if (inputs.type && (!property.code_pretty || !property.code_type)) {
+    inputs.code_type = await getNextCodeType(inputs.type, client_id) as unknown as number
+    inputs.code_pretty = makeCodePretty(inputs.type, inputs.code_type);
+  }
+
+  if (!inputs.type) {
+    inputs.code_type = null;
+    inputs.code_pretty = null;
   }
 
   return inputs
@@ -104,7 +104,7 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     if (!validatorResult.isEmpty())
       return res.status(202).json({ error: validatorResult.array() })
 
-    const inputs = prepareFieldsToCreate(body, client.id);
+    const inputs = await prepareFieldsToCreate(body, client.id);
 
     /**
      * Start transaction
@@ -140,6 +140,7 @@ export const update = async (req: Request, res: Response): Promise<any> => {
 
     const property = await Properties.findOne({ where: { client_id: client.id, id } })
     const inputs = await prepareFieldsToUpdate(body, Number(client.id), property);
+
     const updatedProperty = await property.update(inputs)
 
     return res.status(200).json({ property: { data: updatedProperty }, message: 'Property updated successfully', status: 200 });
