@@ -16,7 +16,7 @@ import { resolvers } from '@/schemas/resolvers';
 import { typeDefs } from '@/schemas/typeDefs';
 
 /** Routes */
-import { propertyRoutes, userRoutes } from '@/routes/api/rest/guard';
+import { propertyPhotosRoutes, propertyRoutes, userRoutes } from '@/routes/api/rest/guard';
 import { tokenRoutes } from '@/routes/api/rest/public';
 
 /** Check Environment */
@@ -139,6 +139,7 @@ const starter = async () => {
   app.use(tokenRoutes.default)
   app.use(userRoutes.default)
   app.use(propertyRoutes.default)
+  app.use(propertyPhotosRoutes.default)
 
   syncAssociations()
 }

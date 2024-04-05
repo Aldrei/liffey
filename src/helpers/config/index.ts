@@ -1,10 +1,15 @@
 import ENV from "@/config";
 import { IClient } from "@/database/models";
 
+export const UPLOAD_STORAGE_PATH = 'public/images'
+
 export enum GetCdnUrlType {
-  THUMB_IMAGE = '/photos/thumb/',
-  NORMAL_IMAGE = '/photos/normal/',
+  THUMB_IMAGE = '/public/images/thumb-',
+  NORMAL_IMAGE = '/public/images/',
 }
+
+export const THUMB_STORAGE_PATH = `${process.cwd()}/${GetCdnUrlType.THUMB_IMAGE}`
+export const NORMAL_STORAGE_PATH = `${process.cwd()}/${GetCdnUrlType.NORMAL_IMAGE}`
 
 export const getCdnUrl = (file: string, type: GetCdnUrlType): string => {
   if (!file) return ''

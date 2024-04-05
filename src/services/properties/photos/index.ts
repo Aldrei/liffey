@@ -1,0 +1,114 @@
+import { Clients, Photos } from "@/database/models";
+import { NORMAL_STORAGE_PATH, THUMB_STORAGE_PATH } from "@/helpers/config";
+import { extractUserFromToken } from "@/helpers/token";
+import { Request, Response } from 'express';
+import fs from 'fs';
+import sharp from 'sharp';
+
+const watermarkImage = async (inputImage: string, watermarkName: string) => {
+  try {
+    const watermarkPath = `${NORMAL_STORAGE_PATH}${watermarkName}`
+    const watermarkBuffer = fs.readFileSync(watermarkPath)
+
+    if (!watermarkBuffer) throw Error(`Error to read watermark: ${watermarkName}`)
+
+    const cropImageInput = 
+      await sharp(inputImage)
+      .composite([{ input: watermarkBuffer, gravity: 'southwest'  }])
+      .toBuffer();
+
+    return cropImageInput
+  } catch (error) {
+    console.log(error);
+    return { error: error.message }
+  }
+}
+
+const cropImage = async (inputPath: string, outputPath: string, width: number, height: number, watermarkName?: string): Promise<any> => {
+  try {
+    const cropImageInput: any = watermarkName 
+      ? await watermarkImage(inputPath, watermarkName) 
+      : inputPath
+
+    if (cropImageInput.error) throw Error(`Error to read watermark: ${watermarkName}`)
+
+    await
+      sharp(cropImageInput)
+      .resize(width, height, {
+        fit: 'inside'
+      })
+      .toFile(outputPath);
+
+    console.log('Image created successfully.');
+  } catch (error) {
+    console.error('Error cropping image:', error);
+    return { error: error.message }
+  }
+}
+
+export const store = async (req: Request, res: Response): Promise<any> => {  
+  try {
+    const { client } = extractUserFromToken(req)
+    const dataClient = await Clients.findOne({ 
+      where: {
+        id: client.id
+      }, 
+      attributes: ['watermark']
+    })
+
+    const { filename } = req.file;
+    const { property_id } = req.params
+
+    /**
+     * Crop and make the watermark for normal size.
+    */
+    const normalSizePath = `${NORMAL_STORAGE_PATH}${filename}`
+    const normalSizeError = await cropImage(normalSizePath, normalSizePath, 1366, 790, dataClient.watermark)
+
+    if (normalSizeError?.error) {
+      fs.unlink(normalSizePath, (err) => {
+        if (err) throw Error(err.message);
+        console.log(`Crop image error, image was deleted(${normalSizePath}). Error: ${normalSizeError?.error}`);
+      })
+
+      throw Error(normalSizeError.error)
+    }
+
+    /**
+     * Crop and make the watermark for thumb size.
+    */
+    const thumbSizePath = `${THUMB_STORAGE_PATH}${filename}`
+    const thumbSizeError = await cropImage(normalSizePath, thumbSizePath, 512, 390)
+
+    if (thumbSizeError?.error) {
+      fs.unlink(normalSizePath, (err) => {
+        if (err) throw Error(err.message);
+        console.log(`Crop image error so image was deleted(${normalSizePath}). Error: ${thumbSizeError?.error}`);
+      })
+
+      fs.unlink(thumbSizePath, (err) => {
+        if (err) throw Error(err.message);
+        console.log(`Crop image error so image was deleted(${thumbSizePath}). Error: ${thumbSizeError?.error}`);
+      })
+      
+      throw Error(thumbSizeError.error)
+    }
+
+    /**
+     * All good so save the image name returned by multer middleware.
+    */
+    await Photos.create({ property_id: Number(property_id), src: filename, type: 'image', order: 99 })
+
+    return res.status(200).json({
+      success: {
+        upload: {
+          normal: normalSizePath,
+          thumb: thumbSizePath
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+}
