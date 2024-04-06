@@ -1,7 +1,8 @@
 import ENV from "@/config";
 import { IClient } from "@/database/models";
 
-export const UPLOAD_STORAGE_PATH = 'public/images'
+export const UPLOAD_IMAGE_STORAGE_PATH = 'public/images'
+export const UPLOAD_VIDEO_STORAGE_PATH = 'public/videos'
 
 export enum GetCdnUrlType {
   THUMB_IMAGE = '/public/images/thumb-',

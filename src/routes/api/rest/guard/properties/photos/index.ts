@@ -4,12 +4,12 @@ import { destroy, store, update, updatePositions } from '@/services/properties/p
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
-import { UPLOAD_STORAGE_PATH } from '@/helpers/config';
+import { UPLOAD_IMAGE_STORAGE_PATH } from '@/helpers/config';
 import multer from 'multer';
 
 const storage = multer.diskStorage({
   destination: function (_req, _file, cb) {
-    cb(null, UPLOAD_STORAGE_PATH)
+    cb(null, UPLOAD_IMAGE_STORAGE_PATH)
   },
   filename: function (_req, file, cb) {
     const extension = path.extname(file.originalname)
