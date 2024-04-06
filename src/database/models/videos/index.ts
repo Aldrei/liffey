@@ -44,10 +44,13 @@ export const Videos = db.define<VideosModel>('Videos', {
   created_at: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: DataTypes.NOW,
   },
   updated_at: {
     type: DataTypes.DATE,
     allowNull: true,
+    defaultValue: DataTypes.NOW,
+    onUpdate: 'CURRENT_TIMESTAMP',
   },
 }, {
   tableName: 'videos',
