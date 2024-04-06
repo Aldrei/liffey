@@ -132,6 +132,32 @@ export const update = async (req: Request, res: Response): Promise<any> => {
   }
 }
 
+export const destroy = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { property_id, photo_id } = req.params
+
+    const photo = await Photos.findOne({ where: { id: Number(photo_id), property_id: Number(property_id) } })
+
+    const pathThumb = `${THUMB_STORAGE_PATH}${photo.src}`
+    const pathNormal = `${NORMAL_STORAGE_PATH}${photo.src}`
+
+    fs.unlink(pathThumb, error => {
+      if (error) throw Error(`Error deleting thumb image. ${error.message}`)
+    })
+
+    fs.unlink(pathNormal, error => {
+      if (error) throw Error(`Error deleting thumb image. ${error.message}`)
+    })
+
+    await Photos.destroy({ where: { id: photo_id } })
+
+    return res.status(200).json({ photo, message: 'Photo deleted successfully.' })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message })
+  }
+}
+
 export const updatePositions = async (req: Request, res: Response): Promise<any> => {
   try {
     const { property_id } = req.params
