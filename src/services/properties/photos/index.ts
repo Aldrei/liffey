@@ -1,9 +1,12 @@
-import { Clients, Photos } from "@/database/models";
+import { Clients, IPhoto, Photos } from "@/database/models";
+import { photoParsePtToEn, photoPositionsParsePtToEn } from "@/database/parse/photo";
 import { NORMAL_STORAGE_PATH, THUMB_STORAGE_PATH } from "@/helpers/config";
 import { extractUserFromToken } from "@/helpers/token";
 import { Request, Response } from 'express';
 import fs from 'fs';
 import sharp from 'sharp';
+
+const prepareFieldsToUpdate = async (body: any): Promise<Partial<IPhoto>> => photoParsePtToEn(body)
 
 const watermarkImage = async (inputImage: string, watermarkName: string) => {
   try {
@@ -110,5 +113,43 @@ export const store = async (req: Request, res: Response): Promise<any> => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
+  }
+}
+
+export const update = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { property_id, photo_id } = req.params
+    const { body } = req
+
+    const inputs = await prepareFieldsToUpdate(body)
+
+    const photo = await Photos.update(inputs, { where: { id: Number(photo_id), property_id: Number(property_id) } })
+
+    return res.status(200).json({ photo, message: 'Photo updated successfully.' })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message })
+  }
+}
+
+export const updatePositions = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { property_id } = req.params
+    const { body } = req
+
+    if (!body?.data?.length) throw Error(`There's no photo data to update.`)
+
+    const inputs = photoPositionsParsePtToEn(body.data)
+
+    const updateFn = inputs.map(async (photo: any) => (
+      await Photos.update({ order: photo.order }, { where: { property_id, id: photo.photo_id }})
+    ))
+
+    await Promise.all(updateFn)
+
+    return res.status(200).json({ message: 'Photos positions updated successfully.' })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message })
   }
 }

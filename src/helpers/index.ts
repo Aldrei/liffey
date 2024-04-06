@@ -33,22 +33,20 @@ export const switchToInteger = (value: any): number => (value === 'on' || value 
 
 export const removeSpecialChar = (str: string) => str.replace(/[^a-zA-Z0-9]/g, '')
 
-export const makeCodePretty = (str: string, codeType: number): string => {
+export const makeCodePretty = (type: string, codeType: number): string => {
   try {
     let complement: string;
 
-    switch (codeType.toString().length) {
+    switch (codeType?.toString()?.length) {
       case 1: complement = '00'; break;
       case 2: complement = '0'; break;
       default: complement = '';
     }
 
-    const strArr: string[] = str.split(' ');
+    const strArr: string[] = type.split(' ');
 
-    const abbr: string = `
-      ${strArr[0] ? removeSpecialChar(strArr[0]).substring(0, 2).toUpperCase() : ''}
-      ${strArr[1] ? removeSpecialChar(strArr[1]).substring(0, 1).toUpperCase() : ''}
-    `
+    const abbr: string = `${strArr[0] ? removeSpecialChar(strArr[0]).substring(0, 2).toUpperCase() : ''}${strArr[1] ? removeSpecialChar(strArr[1]).substring(0, 1).toUpperCase() : ''}`
+
     return `${abbr}${complement}${codeType.toString()}`
   } catch (error) {
     console.log(error);
