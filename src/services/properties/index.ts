@@ -145,7 +145,7 @@ export const update = async (req: Request, res: Response): Promise<any> => {
 
     return res.status(200).json({ property: { data: updatedProperty }, message: 'Property updated successfully', status: 200 });
   } catch (error) {
-    console.error( error);
+    console.error(error);
     return res.status(500).json({ error: error.message });
   }
 }
