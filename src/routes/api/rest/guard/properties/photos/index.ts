@@ -1,5 +1,5 @@
 import { router } from '@/express.instance';
-import { store, update } from '@/services/properties/photos';
+import { store, update, updatePositions } from '@/services/properties/photos';
 
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,5 +28,6 @@ const upload = multer({
 
 router.post('/api/properties/:property_id/photos', upload.single('file'), store)
 router.put('/api/properties/:property_id/photos/:photo_id', update)
+router.post('/api/properties/:property_id/photos/all/update-posicoes', updatePositions)
 
 export default router
