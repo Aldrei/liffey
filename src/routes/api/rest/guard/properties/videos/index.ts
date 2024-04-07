@@ -1,5 +1,5 @@
 import { router } from '@/express.instance';
-import { store } from '@/services/properties/videos';
+import { destroy, store } from '@/services/properties/videos';
 
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,5 +27,6 @@ const upload = multer({
 })
 
 router.post('/api/properties/:property_id/videos', upload.single('file'), store)
+router.delete('/api/properties/:property_id/videos/:video_id', destroy)
 
 export default router

@@ -12,6 +12,12 @@ export enum GetCdnUrlType {
 export const THUMB_STORAGE_PATH = `${process.cwd()}/${GetCdnUrlType.THUMB_IMAGE}`
 export const NORMAL_STORAGE_PATH = `${process.cwd()}/${GetCdnUrlType.NORMAL_IMAGE}`
 
+export enum GetVideoCdnUrlType {
+  NORMAL = '/public/videos/',
+}
+
+export const SYSTEM_VIDEO_STORAGE_PATH = `${process.cwd()}/${GetVideoCdnUrlType.NORMAL}`
+
 export const getCdnUrl = (file: string, type: GetCdnUrlType): string => {
   if (!file) return ''
 
