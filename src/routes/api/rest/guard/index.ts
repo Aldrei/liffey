@@ -1,3 +1,4 @@
+export * as cityRoutes from '@/routes/api/rest/guard/cities';
 export * as employeesRoutes from '@/routes/api/rest/guard/employees';
 export * as ownerRoutes from '@/routes/api/rest/guard/owners';
 export * as propertyRoutes from '@/routes/api/rest/guard/properties';
