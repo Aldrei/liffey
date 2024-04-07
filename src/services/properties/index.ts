@@ -76,6 +76,11 @@ const prepareFieldsToUpdate = async (body: any, client_id: number, property: Pro
 }
 
 export const store = async (req: Request, res: Response): Promise<any> => {
+  /**
+    * Start transaction
+  */
+  const t = await db.transaction()
+
   try {
     const { user } = extractUserFromToken(req)
     const client = await Clients.findOne({ where: { user_id: user.id } })
@@ -87,22 +92,23 @@ export const store = async (req: Request, res: Response): Promise<any> => {
 
     const inputs = await prepareFieldsToCreate(body, client.id);
 
-    /**
-     * Start transaction
-    */
-    const t = await db.transaction()
-
     const newProperty = await Properties.create(inputs, { transaction: t });
     await Clients.update({ property_count: body.code }, { transaction: t, where: { id: client.id } })
 
-    t.commit()
     /**
      * Commit transaction
     */
+    await t.commit()
 
     return res.status(200).json({ property: newProperty, message: 'Property created successfully' });
   } catch (error) {
     console.error(error);
+
+    /**
+     * Rollback transaction
+    */
+    await t.rollback();
+
     return res.status(500).json({ error: error.message });
   }
 }
