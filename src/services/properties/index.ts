@@ -5,7 +5,6 @@ import { dateBrToDb, decimalBrToDb, makeCodePretty } from '@/helpers';
 import { extractUserFromToken } from '@/helpers/token';
 import { Request, Response } from 'express';
 
-import { Result, validationResult } from 'express-validator';
 
 const getNextCodeType = async (type: string, client_id: number): Promise<number> => {
   try {
@@ -15,19 +14,6 @@ const getNextCodeType = async (type: string, client_id: number): Promise<number>
     console.error('Error in getNextCodeType:', error);
   }
 };
-
-export const validator = (body: any): Result => {
-  const rules: any = {};
-
-  if (!body.hasOwnProperty('city_id')) rules.city_id = 'required';
-  if (!body.hasOwnProperty('neighborhood_id')) rules.neighborhood_id = 'required';
-  if (!body.hasOwnProperty('owner_id')) rules.owner_id = 'required';
-
-  rules.broker_id = 'required';
-  rules.agent_id = 'required';
-
-  return validationResult(body);
-}
 
 const prepareFieldsToCreateAndUpdate = (body: any): Partial<IProperty> => {
   const inputs: Partial<IProperty> = propertyParsePayloadPtToEn(body)
@@ -99,11 +85,6 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     body.client_id = client.id
     body.code = client.property_count+1
 
-    const validatorResult = validator(body)
-
-    if (!validatorResult.isEmpty())
-      return res.status(202).json({ error: validatorResult.array() })
-
     const inputs = await prepareFieldsToCreate(body, client.id);
 
     /**
@@ -132,11 +113,6 @@ export const update = async (req: Request, res: Response): Promise<any> => {
     const { body } = req
 
     const { client } = extractUserFromToken(req)
-
-    const validatorResult = validator(body)
-
-    if (!validatorResult.isEmpty())
-      return res.status(202).json({ error: validatorResult.array() })
 
     const property = await Properties.findOne({ where: { client_id: client.id, id } })
     const inputs = await prepareFieldsToUpdate(body, Number(client.id), property);
