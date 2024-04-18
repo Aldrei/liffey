@@ -1,8 +1,14 @@
 import { ICity } from "@/database/models";
 import { deepCloneObj } from "@/helpers/object";
 
-interface ITransformedCities extends ICity {}
+export interface ITransformedCities extends ICity {
+  long_desc: string
+}
 
 export const transformCity = (source: ICity): ITransformedCities => {
-  return <ITransformedCities>deepCloneObj(source)
+  const data = <ITransformedCities>deepCloneObj(source)
+
+  data.long_desc = `${data.name}`
+
+  return data
 }
