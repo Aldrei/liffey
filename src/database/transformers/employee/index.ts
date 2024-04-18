@@ -2,7 +2,7 @@ import { IEmployees } from "@/database/models";
 import { GetCdnUrlType, getCdnUrl } from "@/helpers/config";
 import { deepCloneObj } from "@/helpers/object";
 
-interface ITransformedEmployee extends Omit<IEmployees, 'photo'> {
+export interface ITransformedEmployee extends Omit<IEmployees, 'photo'> {
   photo: {
     thumb: string
     normal: string
