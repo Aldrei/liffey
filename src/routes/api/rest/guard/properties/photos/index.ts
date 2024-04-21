@@ -29,7 +29,7 @@ const upload = multer({
 router.post('/api/properties/:code/photos', upload.single('file'), store)
 router.put('/api/properties/:code/photos/:photo_id', update)
 router.post('/api/properties/:property_id/photos/all/update-posicoes', updatePositions)
-router.delete('/api/properties/:property_id/photos/:photo_id', destroy)
+router.delete('/api/properties/:code/photos/:photo_id', destroy)
 router.get('/api/properties/:code/photos', list)
 
 export default router

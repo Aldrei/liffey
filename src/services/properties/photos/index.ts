@@ -141,9 +141,12 @@ export const update = async (req: Request, res: Response): Promise<any> => {
 
 export const destroy = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { property_id, photo_id } = req.params
+    const { client } = extractUserFromToken(req)
 
-    const photo = await Photos.findOne({ where: { id: Number(photo_id), property_id: Number(property_id) } })
+    const { code, photo_id } = req.params
+
+    const property = await Properties.findOne({ where: { client_id: client.id, code: Number(code) }, attributes: ['id'] })
+    const photo = await Photos.findOne({ where: { id: Number(photo_id), property_id: Number(property.id) } })
 
     const pathThumb = `${THUMB_STORAGE_PATH}${photo.src}`
     const pathNormal = `${NORMAL_STORAGE_PATH}${photo.src}`
