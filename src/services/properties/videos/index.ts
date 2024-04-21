@@ -30,9 +30,12 @@ export const store = async (req: Request, res: Response): Promise<any> => {
 
 export const destroy = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { property_id, video_id } = req.params
+    const { client } = extractUserFromToken(req)
 
-    const video = await Videos.findOne({ where: { id: Number(video_id), property_id: Number(property_id) } })
+    const { code, video_id } = req.params
+
+    const property = await Properties.findOne({ where: { client_id: client.id, code: Number(code) }, attributes: ['id'] })
+    const video = await Videos.findOne({ where: { id: Number(video_id), property_id: Number(property.id) } })
 
     const videoPath = `${SYSTEM_VIDEO_STORAGE_PATH}${video.src}`
 

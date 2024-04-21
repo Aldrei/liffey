@@ -27,7 +27,7 @@ const upload = multer({
 })
 
 router.post('/api/properties/:code/videos', upload.single('file'), store)
-router.delete('/api/properties/:property_id/videos/:video_id', destroy)
+router.delete('/api/properties/:code/videos/:video_id', destroy)
 router.get('/api/properties/:code/videos', list)
 
 export default router
