@@ -25,6 +25,6 @@ export const validatorMiddleware = [
 
 router.post('/api/properties', validatorMiddleware, store)
 router.put('/api/properties/:id', validatorMiddleware, update)
-router.get('/api/properties/:id', detail)
+router.get('/api/properties/:code', detail)
 
 export default router

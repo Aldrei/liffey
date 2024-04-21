@@ -1,5 +1,5 @@
 import { router } from '@/express.instance';
-import { destroy, store, update, updatePositions } from '@/services/properties/photos';
+import { destroy, list, store, update, updatePositions } from '@/services/properties/photos';
 
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
@@ -26,9 +26,10 @@ const upload = multer({
   }
 })
 
-router.post('/api/properties/:property_id/photos', upload.single('file'), store)
+router.post('/api/properties/:code/photos', upload.single('file'), store)
 router.put('/api/properties/:property_id/photos/:photo_id', update)
 router.post('/api/properties/:property_id/photos/all/update-posicoes', updatePositions)
 router.delete('/api/properties/:property_id/photos/:photo_id', destroy)
+router.get('/api/properties/:code/photos', list)
 
 export default router

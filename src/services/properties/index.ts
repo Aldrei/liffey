@@ -1,6 +1,7 @@
 import db from '@/database/instance';
-import { Clients, IProperty, Properties, PropertyModel } from '@/database/models';
-import { propertyParsePayloadPtToEn } from '@/database/parse/property';
+import { Cities, Clients, Employees, IProperty, Neighborhoods, Owners, Photos, Properties, PropertyModel, Videos } from '@/database/models';
+import { propertyParseEnToPt, propertyParsePayloadPtToEn } from '@/database/parse/property';
+import { transformProperty } from '@/database/transformers/property';
 import { dateBrToDb, decimalBrToDb, makeCodePretty } from '@/helpers';
 import { extractUserFromToken } from '@/helpers/token';
 import { Request, Response } from 'express';
@@ -100,7 +101,13 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     */
     await t.commit()
 
-    return res.status(200).json({ property: newProperty, message: 'Property created successfully' });
+    return res.status(200).json({ 
+      property: {
+        data: newProperty
+      }, 
+      message: 'Property created successfully',
+      status: 200
+    });
   } catch (error) {
     console.error(error);
 
@@ -125,7 +132,11 @@ export const update = async (req: Request, res: Response): Promise<any> => {
 
     const updatedProperty = await property.update(inputs)
 
-    return res.status(200).json({ property: { data: updatedProperty }, message: 'Property updated successfully', status: 200 });
+    return res.status(200).json({ 
+      property: { data: updatedProperty }, 
+      message: 'Property updated successfully', 
+      status: 200 
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
@@ -134,13 +145,66 @@ export const update = async (req: Request, res: Response): Promise<any> => {
 
 export const detail = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { id } = req.params
+    const { lang } = req.query
+    const { code } = req.params
 
-    const { client } = extractUserFromToken(req)
+    const { client: clientJwt } = extractUserFromToken(req)
 
-    const property = await Properties.findOne({ where: { client_id: client.id, id } })
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
 
-    return res.status(200).json({ property: { data: property } });
+    // Raw data
+    const property = await Properties.findOne({
+      where: { client_id: client.id, code },
+      include: [{
+        model: Cities,
+        required: false,
+        attributes: ['id', 'name']
+      }, {
+        model: Neighborhoods,
+        required: false,
+        attributes: ['id', 'name']
+      }, {
+        model: Photos,
+        required: false,
+        attributes: ['id', 'src', 'order', 'rotate']
+      }, {
+        model: Videos,
+        required: false,
+        attributes: ['id', 'src']
+      }, {
+        model: Owners,
+        required: false,
+        attributes: ['id', 'name_or_company']
+      }, {
+        model: Employees,
+        required: false,
+        as: 'Broker',
+        attributes: ['id', 'name']
+      }, {
+        model: Employees,
+        required: false,
+        as: 'Agent',
+        attributes: ['id', 'name']
+      }]
+    })
+
+    // Transformed data
+    const transformedData = transformProperty(property, client)
+
+    const enDataFields = {
+      property: {
+        data: transformedData,
+        message: 'Success',
+        status: 200
+      }
+    }
+
+    // Translated fields
+    if (lang !== 'EN') {
+      enDataFields.property.data = propertyParseEnToPt(transformedData)
+    }
+
+    return res.status(200).json(enDataFields);
   } catch (error) {
     console.error( error);
     return res.status(500).json({ error: error.message });

@@ -1,16 +1,20 @@
-import { Videos } from "@/database/models";
+import { Properties, Videos } from "@/database/models";
 import { SYSTEM_VIDEO_STORAGE_PATH } from "@/helpers/config";
 
 import fs from 'fs';
 
+import { extractUserFromToken } from "@/helpers/token";
 import { Request, Response } from 'express';
 
 export const store = async (req: Request, res: Response): Promise<any> => {  
   try {
-    const { filename } = req.file;
-    const { property_id } = req.params
+    const { client } = extractUserFromToken(req)
 
-    const newVideo = await Videos.create({ property_id: Number(property_id), src: filename })
+    const { filename } = req.file;
+    const { code } = req.params
+
+    const property = await Properties.findOne({ where: { client_id: client.id, code }, attributes: ['id'] })
+    const newVideo = await Videos.create({ property_id: Number(property.id), src: filename })
 
     return res.status(200).json({
       newVideo,

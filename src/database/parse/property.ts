@@ -1,3 +1,9 @@
+import { cityParseEnToPt } from "./city";
+import { employeeParseEnToPt } from "./employee";
+import { neighborhoodParseEnToPt } from "./neighborhood";
+import { ownerParseEnToPt } from "./owner";
+import { photoParseEnToPt } from "./photo";
+
 export const propertySource = [{
   "id": 12345,
   "client_id": 5,
@@ -298,7 +304,28 @@ export const propertyParseEnToPt = <T>(source: any) => ({
   videoURL: source.video_url,
   idUltimaTransacao: source.last_transaction_id,
   created_at: source.created_at,
-  updated_at: source.updated_at
+  updated_at: source.updated_at,
+  city: {
+    data: cityParseEnToPt(source?.city?.data)
+  },
+  neighborhood: {
+    data: neighborhoodParseEnToPt(source?.neighborhood?.data)
+  },
+  owner: {
+    data: ownerParseEnToPt(source?.owner?.data)
+  },
+  broker: {
+    data: employeeParseEnToPt(source?.broker?.data)
+  },
+  agent: {
+    data: employeeParseEnToPt(source?.agent?.data)
+  },
+  photo: {
+    data: photoParseEnToPt(source?.photo?.data)
+  },
+  video: {
+    data: photoParseEnToPt(source?.video?.data)
+  },
 } as T);
 
 export const propertyParsePayloadPtToEn = <T>(source: any) => ({
