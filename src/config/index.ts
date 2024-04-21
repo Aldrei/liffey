@@ -25,6 +25,9 @@ export interface IProcessEnv {
   RATE_LIMIT_LEGACY_HEADER: boolean
   RATE_LIMIT_STATUS_CODE: number
   RATE_LIMIT_PROP_NAME: string
+  MONOLITHIC_DOMAINS: string
+  REACT_APP_DOMAINS: string
+  SEAGULL_DOMAINS: string
 }
 
 dotenv.config()

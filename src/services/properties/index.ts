@@ -1,11 +1,11 @@
 import db from '@/database/instance';
-import { Clients, IProperty, Properties, PropertyModel } from '@/database/models';
-import { propertyParsePayloadPtToEn } from '@/database/parse/property';
+import { Cities, Clients, Employees, IProperty, Neighborhoods, Owners, Photos, Properties, PropertyModel, Videos } from '@/database/models';
+import { propertyParseEnToPt, propertyParsePayloadPtToEn } from '@/database/parse/property';
+import { transformProperty } from '@/database/transformers/property';
 import { dateBrToDb, decimalBrToDb, makeCodePretty } from '@/helpers';
 import { extractUserFromToken } from '@/helpers/token';
 import { Request, Response } from 'express';
 
-import { Result, validationResult } from 'express-validator';
 
 const getNextCodeType = async (type: string, client_id: number): Promise<number> => {
   try {
@@ -15,19 +15,6 @@ const getNextCodeType = async (type: string, client_id: number): Promise<number>
     console.error('Error in getNextCodeType:', error);
   }
 };
-
-export const validator = (body: any): Result => {
-  const rules: any = {};
-
-  if (!body.hasOwnProperty('city_id')) rules.city_id = 'required';
-  if (!body.hasOwnProperty('neighborhood_id')) rules.neighborhood_id = 'required';
-  if (!body.hasOwnProperty('owner_id')) rules.owner_id = 'required';
-
-  rules.broker_id = 'required';
-  rules.agent_id = 'required';
-
-  return validationResult(body);
-}
 
 const prepareFieldsToCreateAndUpdate = (body: any): Partial<IProperty> => {
   const inputs: Partial<IProperty> = propertyParsePayloadPtToEn(body)
@@ -90,6 +77,11 @@ const prepareFieldsToUpdate = async (body: any, client_id: number, property: Pro
 }
 
 export const store = async (req: Request, res: Response): Promise<any> => {
+  /**
+    * Start transaction
+  */
+  const t = await db.transaction()
+
   try {
     const { user } = extractUserFromToken(req)
     const client = await Clients.findOne({ where: { user_id: user.id } })
@@ -99,29 +91,31 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     body.client_id = client.id
     body.code = client.property_count+1
 
-    const validatorResult = validator(body)
-
-    if (!validatorResult.isEmpty())
-      return res.status(202).json({ error: validatorResult.array() })
-
     const inputs = await prepareFieldsToCreate(body, client.id);
-
-    /**
-     * Start transaction
-    */
-    const t = await db.transaction()
 
     const newProperty = await Properties.create(inputs, { transaction: t });
     await Clients.update({ property_count: body.code }, { transaction: t, where: { id: client.id } })
 
-    t.commit()
     /**
      * Commit transaction
     */
+    await t.commit()
 
-    return res.status(200).json({ property: newProperty, message: 'Property created successfully' });
+    return res.status(200).json({ 
+      property: {
+        data: newProperty
+      }, 
+      message: 'Property created successfully',
+      status: 200
+    });
   } catch (error) {
     console.error(error);
+
+    /**
+     * Rollback transaction
+    */
+    await t.rollback();
+
     return res.status(500).json({ error: error.message });
   }
 }
@@ -133,17 +127,16 @@ export const update = async (req: Request, res: Response): Promise<any> => {
 
     const { client } = extractUserFromToken(req)
 
-    const validatorResult = validator(body)
-
-    if (!validatorResult.isEmpty())
-      return res.status(202).json({ error: validatorResult.array() })
-
     const property = await Properties.findOne({ where: { client_id: client.id, id } })
     const inputs = await prepareFieldsToUpdate(body, Number(client.id), property);
 
     const updatedProperty = await property.update(inputs)
 
-    return res.status(200).json({ property: { data: updatedProperty }, message: 'Property updated successfully', status: 200 });
+    return res.status(200).json({ 
+      property: { data: updatedProperty }, 
+      message: 'Property updated successfully', 
+      status: 200 
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message });
@@ -152,13 +145,66 @@ export const update = async (req: Request, res: Response): Promise<any> => {
 
 export const detail = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { id } = req.params
+    const { lang } = req.query
+    const { code } = req.params
 
-    const { client } = extractUserFromToken(req)
+    const { client: clientJwt } = extractUserFromToken(req)
 
-    const property = await Properties.findOne({ where: { client_id: client.id, id } })
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
 
-    return res.status(200).json({ property: { data: property } });
+    // Raw data
+    const property = await Properties.findOne({
+      where: { client_id: client.id, code },
+      include: [{
+        model: Cities,
+        required: false,
+        attributes: ['id', 'name']
+      }, {
+        model: Neighborhoods,
+        required: false,
+        attributes: ['id', 'name']
+      }, {
+        model: Photos,
+        required: false,
+        attributes: ['id', 'src', 'order', 'rotate']
+      }, {
+        model: Videos,
+        required: false,
+        attributes: ['id', 'src']
+      }, {
+        model: Owners,
+        required: false,
+        attributes: ['id', 'name_or_company']
+      }, {
+        model: Employees,
+        required: false,
+        as: 'Broker',
+        attributes: ['id', 'name']
+      }, {
+        model: Employees,
+        required: false,
+        as: 'Agent',
+        attributes: ['id', 'name']
+      }]
+    })
+
+    // Transformed data
+    const transformedData = transformProperty(property, client)
+
+    const enDataFields = {
+      property: {
+        data: transformedData,
+        message: 'Success',
+        status: 200
+      }
+    }
+
+    // Translated fields
+    if (lang !== 'EN') {
+      enDataFields.property.data = propertyParseEnToPt(transformedData)
+    }
+
+    return res.status(200).json(enDataFields);
   } catch (error) {
     console.error( error);
     return res.status(500).json({ error: error.message });

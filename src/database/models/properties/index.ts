@@ -1,6 +1,6 @@
 // Import Sequelize and necessary types
 import db from '@/database/instance';
-import { Cities, Clients, Employees, Neighborhoods, Owners } from '@/database/models';
+import { Cities, Clients, Employees, ICity, IEmployees, INeighborhood, IOwner, IPhoto, IVideo, Neighborhoods, Owners } from '@/database/models';
 import { DataTypes, Model } from 'sequelize';
 
 // Define the interface for the properties model
@@ -101,6 +101,13 @@ export interface IProperty {
   publish_map_website: boolean | null;
   video_url: string | null;
   last_transaction_id: string | null;
+  City?: ICity;
+  Neighborhood?: INeighborhood;
+  Owner?: IOwner;
+  Broker?: IEmployees;
+  Agent?: IEmployees;
+  Photo?: IPhoto[]
+  Video?: IVideo[]
   created_at?: Date;
   updated_at?: Date;
 }
@@ -523,8 +530,8 @@ export const PropertiesSetup = {
   syncTable: async () => await Properties.sync({ force: true }),
   syncAssociations: async () => {
     // Application level.
-    Properties.belongsTo(Employees, { foreignKey: 'agent_id', onDelete: 'SET NULL' });
-    Properties.belongsTo(Employees, { foreignKey: 'broker_id', onDelete: 'SET NULL' });
+    Properties.belongsTo(Employees, { foreignKey: 'agent_id', onDelete: 'SET NULL', as: 'Agent' });
+    Properties.belongsTo(Employees, { foreignKey: 'broker_id', onDelete: 'SET NULL', as: 'Broker' });
     Properties.belongsTo(Cities, { foreignKey: 'city_id', onDelete: 'SET NULL' });
     Properties.belongsTo(Clients, { foreignKey: 'client_id', onDelete: 'CASCADE' });
     Properties.belongsTo(Neighborhoods, { foreignKey: 'neighborhood_id', onDelete: 'SET NULL' });

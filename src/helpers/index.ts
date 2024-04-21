@@ -49,6 +49,40 @@ export const makeCodePretty = (type: string, codeType: number): string => {
 
     return `${abbr}${complement}${codeType.toString()}`
   } catch (error) {
-    console.log(error);
+    console.error(`makeCodePretty ${error}`);
+    return ''
   }
 };
+
+export const removeHTML = (htmlString: string): string => {
+  try {
+    const htmlRegex = /<[^>]*>/g;
+    return htmlString.replace(htmlRegex, '');
+  } catch (error) {
+    console.error(`removeHTML ${error}`);
+    return ''
+  }
+}
+
+export const isValidDate = (date: Date): Date => {
+  try {
+    if (!date) return null
+
+    const dateString = date.toDateString().slice(0, 10)
+    
+    if(!dateString || (dateString === '1970-01-01' || dateString === '0000-00-00')) return null
+
+    return date
+  } catch (error) {
+    console.error(`isValidDate: ${error}`);
+    return null
+  }
+}
+
+export const hasValueDecimal = (value: number): number => value && value !== 0.00 ? value : null
+
+export const getCdnUrl = () => `${ENV.CDN_PROTOCOL}${ENV.CDN_HOST}:${ENV.CDN_PORT}`
+
+export const getImageUrl = (src: string) => `${getCdnUrl()}/images/${src}`
+
+export const getVideoUrl = (src: string) => `${getCdnUrl()}/videos/${src}`

@@ -16,7 +16,7 @@ import { resolvers } from '@/schemas/resolvers';
 import { typeDefs } from '@/schemas/typeDefs';
 
 /** Routes */
-import { propertyPhotosRoutes, propertyRoutes, userRoutes, videosRoutes } from '@/routes/api/rest/guard';
+import { cityRoutes, neighborhoodRoutes, ownerRoutes, propertyPhotosRoutes, propertyRoutes, userRoutes, videosRoutes } from '@/routes/api/rest/guard';
 import { tokenRoutes } from '@/routes/api/rest/public';
 
 /** Check Environment */
@@ -45,6 +45,11 @@ app.use(morgan('common', { stream: accessLogStream }))
  * Setup CORS.
 */
 app.use(cors())
+
+/**
+ * Serve static files
+*/
+app.use(express.static('public'));
 
 /**
  * Authentication for GraphQL API.
@@ -83,6 +88,8 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
       return next()
 
     if (originalUrl === '/oauth/access_token') return next()
+    if (originalUrl.indexOf('/images/')) return next()
+    if (originalUrl.indexOf('/favicon.ico')) return next()
 
     const result = await validGuardRouteTokenService(authorization)
     if (result?.error) throw Error(result.error)
@@ -141,6 +148,9 @@ const starter = async () => {
   app.use(propertyRoutes.default)
   app.use(propertyPhotosRoutes.default)
   app.use(videosRoutes.default)
+  app.use(ownerRoutes.default)
+  app.use(cityRoutes.default)
+  app.use(neighborhoodRoutes.default)
 
   syncAssociations()
 }

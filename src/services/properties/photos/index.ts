@@ -1,5 +1,7 @@
-import { Clients, IPhoto, Photos } from "@/database/models";
-import { photoParsePtToEn, photoPositionsParsePtToEn } from "@/database/parse/photo";
+import { Clients, IPhoto, Photos, Properties } from "@/database/models";
+import { photoParseEnToPt, photoParsePtToEn, photoPositionsParsePtToEn } from "@/database/parse/photo";
+import { transformPhoto } from "@/database/transformers/photo";
+import { getImageUrl } from "@/helpers";
 import { NORMAL_STORAGE_PATH, THUMB_STORAGE_PATH } from "@/helpers/config";
 import { extractUserFromToken } from "@/helpers/token";
 import { Request, Response } from 'express';
@@ -60,7 +62,9 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     })
 
     const { filename } = req.file;
-    const { property_id } = req.params
+    const { code } = req.params
+
+    const property = await Properties.findOne({ where: { client_id: client.id, code }, attributes: ['id'] })
 
     /**
      * Crop and make the watermark for normal size.
@@ -100,13 +104,13 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     /**
      * All good so save the image name returned by multer middleware.
     */
-    await Photos.create({ property_id: Number(property_id), src: filename, type: 'image', order: 99 })
+    await Photos.create({ property_id: Number(property.id), src: filename, type: 'image', order: 99 })
 
     return res.status(200).json({
       success: {
         upload: {
-          normal: normalSizePath,
-          thumb: thumbSizePath
+          normal: getImageUrl(normalSizePath),
+          thumb: getImageUrl(thumbSizePath)
         }
       }
     });
@@ -118,14 +122,17 @@ export const store = async (req: Request, res: Response): Promise<any> => {
 
 export const update = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { property_id, photo_id } = req.params
+    const { client } = extractUserFromToken(req)
+
+    const { code, photo_id } = req.params
     const { body } = req
 
     const inputs = await prepareFieldsToUpdate(body)
 
-    const photo = await Photos.update(inputs, { where: { id: Number(photo_id), property_id: Number(property_id) } })
+    const property = await Properties.findOne({ where: { client_id: client.id, code: Number(code) }, attributes: ['id'] })
+    await Photos.update(inputs, { where: { id: Number(photo_id), property_id: Number(property.id) } })
 
-    return res.status(200).json({ photo, message: 'Photo updated successfully.' })
+    return res.status(200).json({ photo: { id: photo_id }, message: 'Photo updated successfully.' })
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message })
@@ -134,9 +141,12 @@ export const update = async (req: Request, res: Response): Promise<any> => {
 
 export const destroy = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { property_id, photo_id } = req.params
+    const { client } = extractUserFromToken(req)
 
-    const photo = await Photos.findOne({ where: { id: Number(photo_id), property_id: Number(property_id) } })
+    const { code, photo_id } = req.params
+
+    const property = await Properties.findOne({ where: { client_id: client.id, code: Number(code) }, attributes: ['id'] })
+    const photo = await Photos.findOne({ where: { id: Number(photo_id), property_id: Number(property.id) } })
 
     const pathThumb = `${THUMB_STORAGE_PATH}${photo.src}`
     const pathNormal = `${NORMAL_STORAGE_PATH}${photo.src}`
@@ -174,6 +184,40 @@ export const updatePositions = async (req: Request, res: Response): Promise<any>
     await Promise.all(updateFn)
 
     return res.status(200).json({ message: 'Photos positions updated successfully.' })
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message })
+  }
+}
+
+export const list = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { client } = extractUserFromToken(req)
+
+    const { code } = req.params
+    const { lang } = req.query
+
+    // Raw data
+    const property = await Properties.findOne({ where: { client_id: client.id, code: Number(code) }, attributes: ['id'] })
+    const photos = await Photos.findAll({ where: { property_id: Number(property.id) } })
+
+    // Transformed data
+    const transformedData = photos.map((item: IPhoto) => transformPhoto(item))
+
+    const enDataFields = {
+      paginate: {
+        data: transformedData as any,
+        message: 'Success',
+        status: 200
+      }
+    }
+
+    // Translated data
+    if (lang !== 'EN') {
+      enDataFields.paginate.data = transformedData.map((item: IPhoto) => photoParseEnToPt(item))
+    }
+
+    return res.status(200).json(enDataFields)
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message })

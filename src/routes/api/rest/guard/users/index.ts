@@ -9,7 +9,7 @@ import { Request, Response } from "express";
 
 router.get('/api/who-is-auth', async (req: Request, res: Response) => {
   try {
-    const fieldsLanguage = req.header('fieldsLanguage')
+    const lang = req.header('lang')
 
     const { user } = extractUserFromToken(req)
 
@@ -36,7 +36,7 @@ router.get('/api/who-is-auth', async (req: Request, res: Response) => {
     }
 
     // Translated fields
-    if (fieldsLanguage !== 'EN') {
+    if (lang !== 'EN') {
       enDataFields.client.data = clientParseEnToPt(transformedClient)
       enDataFields.employee.data = employeeParseEnToPt(transformedEmployee)
     }
