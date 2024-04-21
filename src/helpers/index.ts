@@ -81,6 +81,8 @@ export const isValidDate = (date: Date): Date => {
 
 export const hasValueDecimal = (value: number): number => value && value !== 0.00 ? value : null
 
-export const getCdnUrl = () => `${ENV.CDN_PROTOCOL}${ENV.CDN_HOST}:${ENV.CDN_PORT}/images/`
+export const getCdnUrl = () => `${ENV.CDN_PROTOCOL}${ENV.CDN_HOST}:${ENV.CDN_PORT}`
 
-export const getImageUrl = (src: string) => `${getCdnUrl()}${src}`
+export const getImageUrl = (src: string) => `${getCdnUrl()}/images/${src}`
+
+export const getVideoUrl = (src: string) => `${getCdnUrl()}/videos/${src}`

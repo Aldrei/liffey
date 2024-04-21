@@ -1,5 +1,5 @@
 import { IVideo } from "@/database/models";
-import { getImageUrl } from "@/helpers";
+import { getVideoUrl } from "@/helpers";
 import { deepCloneObj } from "@/helpers/object";
 
 export interface ITransformedVideo extends IVideo {
@@ -10,7 +10,7 @@ export const transformVideo = (source: IVideo): ITransformedVideo => {
   try {
     const data = <ITransformedVideo>deepCloneObj(source)
 
-    data.url = getImageUrl(data.src)
+    data.url = getVideoUrl(data.src)
 
     return data
   } catch (error) {
