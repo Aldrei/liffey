@@ -122,14 +122,17 @@ export const store = async (req: Request, res: Response): Promise<any> => {
 
 export const update = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { property_id, photo_id } = req.params
+    const { client } = extractUserFromToken(req)
+
+    const { code, photo_id } = req.params
     const { body } = req
 
     const inputs = await prepareFieldsToUpdate(body)
 
-    const photo = await Photos.update(inputs, { where: { id: Number(photo_id), property_id: Number(property_id) } })
+    const property = await Properties.findOne({ where: { client_id: client.id, code: Number(code) }, attributes: ['id'] })
+    await Photos.update(inputs, { where: { id: Number(photo_id), property_id: Number(property.id) } })
 
-    return res.status(200).json({ photo, message: 'Photo updated successfully.' })
+    return res.status(200).json({ photo: { id: photo_id }, message: 'Photo updated successfully.' })
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: error.message })
