@@ -47,6 +47,11 @@ app.use(morgan('common', { stream: accessLogStream }))
 app.use(cors())
 
 /**
+ * Serve static files
+*/
+app.use(express.static('public'));
+
+/**
  * Authentication for GraphQL API.
 */
 app.use((req: Request, res: Response, next: NextFunction) => {
@@ -83,6 +88,8 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
       return next()
 
     if (originalUrl === '/oauth/access_token') return next()
+    if (originalUrl.indexOf('/images/')) return next()
+    if (originalUrl.indexOf('/favicon.ico')) return next()
 
     const result = await validGuardRouteTokenService(authorization)
     if (result?.error) throw Error(result.error)
