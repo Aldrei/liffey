@@ -32,7 +32,7 @@ export const transformProperty = (source: IProperty, client: IClient): ITransfor
   const property = <ITransformedProperties>deepCloneObj(source)
 
   // Price
-  if (property.value) property.valuePub = property.value.toFixed(2).replace('.', ',');
+  if (property.value) property.valuePub = property?.value?.toFixed?.(2)?.replace?.('.', ',');
 
   // Description
   const descArray: string[] = [];
@@ -119,14 +119,14 @@ export const transformProperty = (source: IProperty, client: IClient): ITransfor
   delete property.Agent
 
   property.photo = {
-    data: transformPhoto(property?.Photo?.[0])
+    data: transformPhoto(property?.Photos?.[0])
   }
-  delete property.Photo
+  delete property.Photos
 
   property.video = {
-    data: transformVideo(property?.Video?.[0])
+    data: transformVideo(property?.Videos?.[0])
   }
-  delete property.Video
+  delete property.Videos
 
   return property;
 }

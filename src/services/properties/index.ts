@@ -3,9 +3,9 @@ import { Cities, Clients, Employees, IProperty, Neighborhoods, Owners, Photos, P
 import { propertyParseEnToPt, propertyParsePayloadPtToEn } from '@/database/parse/property';
 import { transformProperty } from '@/database/transformers/property';
 import { dateBrToDb, decimalBrToDb, makeCodePretty } from '@/helpers';
+import { getLimit, getNextPage, getOffset, getPerPage, getPrevPage, getValidPage } from '@/helpers/paginate';
 import { extractUserFromToken } from '@/helpers/token';
 import { Request, Response } from 'express';
-
 
 const getNextCodeType = async (type: string, client_id: number): Promise<number> => {
   try {
@@ -202,6 +202,92 @@ export const detail = async (req: Request, res: Response): Promise<any> => {
     // Translated fields
     if (lang !== 'EN') {
       enDataFields.property.data = propertyParseEnToPt(transformedData)
+    }
+
+    return res.status(200).json(enDataFields);
+  } catch (error) {
+    console.error( error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const list = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { lang, page } = req.query
+
+    const PAGE = getValidPage(page)
+
+    const { client: clientJwt } = extractUserFromToken(req)
+
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
+
+    // Raw data
+    const properties = await Properties.findAll({
+      where: {
+        client_id: client.id
+      },
+      offset: getOffset(PAGE),
+      limit: getLimit(),
+      include: [{
+        model: Cities,
+        required: false,
+        attributes: ['id', 'name']
+      }, {
+        model: Neighborhoods,
+        required: false,
+        attributes: ['id', 'name']
+      }, {
+        model: Photos,
+        required: false,
+        attributes: ['id', 'src', 'order', 'rotate']
+      }, {
+        model: Videos,
+        required: false,
+        attributes: ['id', 'src']
+      }, {
+        model: Owners,
+        required: false,
+        attributes: ['id', 'name_or_company']
+      }, {
+        model: Employees,
+        required: false,
+        as: 'Broker',
+        attributes: ['id', 'name']
+      }, {
+        model: Employees,
+        required: false,
+        as: 'Agent',
+        attributes: ['id', 'name']
+      }]
+    })
+
+    // Transformed data
+    const transformedData = properties.map((item: IProperty) => transformProperty(item, client))
+
+    const enDataFields = {
+      paginate: {
+        data: transformedData,
+        meta: {
+          pagination: {
+            // total: 132,
+            // count: 10,
+            per_page: getPerPage(),
+            current_page: PAGE,
+            // total_pages: 14,
+            links: {
+                previous: getPrevPage(PAGE),
+                next: getNextPage(PAGE)
+            }
+          }
+        },
+        message: 'Success',
+        status: 200
+      }
+    }
+
+    // Translated fields
+    if (lang !== 'EN') {
+      enDataFields.paginate.data = transformedData.map((item: IProperty) => propertyParseEnToPt(item))
     }
 
     return res.status(200).json(enDataFields);
