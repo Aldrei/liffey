@@ -1,10 +1,11 @@
 
 export type JWTData = {
-  user: {
+  user?: {
     id: string
     email: string
   }
-  client: {
+  client?: {
     id: string
   }
+  error?: string
 }

@@ -7,8 +7,13 @@ export const extractUserFromToken = (req: Request): JWTData => {
     const { authorization } = req.headers
     const token = authorization.split(' ')[1]
     
-    return jwt.decode(token) as JWTData
+    const decodedToken = jwt.decode(token) as JWTData
+
+    if (!decodedToken) throw Error('Undecoded token.')
+
+    return decodedToken
   } catch (error) {
     console.log(error);
+    return { error: error.message }
   }
 }
