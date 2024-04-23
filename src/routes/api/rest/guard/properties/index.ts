@@ -1,5 +1,5 @@
 import { router } from "@/express.instance";
-import { detail, list, store, update } from "@/services/properties";
+import { destroy, detail, list, store, update } from "@/services/properties";
 import { NextFunction, Request, Response } from "express";
 import { body, validationResult } from "express-validator";
 
@@ -26,6 +26,7 @@ export const validatorMiddleware = [
 router.post('/api/properties', validatorMiddleware, store)
 router.put('/api/properties/:id', validatorMiddleware, update)
 router.get('/api/properties/:code', detail)
+router.delete('/api/properties/:code', destroy)
 router.get('/api/properties', list)
 
 export default router
