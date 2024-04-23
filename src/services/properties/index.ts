@@ -6,6 +6,39 @@ import { dateBrToDb, decimalBrToDb, makeCodePretty } from '@/helpers';
 import { getLimit, getNextPage, getOffset, getPerPage, getPrevPage, getTotalPages, getValidPage } from '@/helpers/paginate';
 import { extractUserFromToken } from '@/helpers/token';
 import { Request, Response } from 'express';
+import { Op } from 'sequelize';
+
+const INCLUDES = [{
+  model: Cities,
+  required: false,
+  attributes: ['id', 'name']
+}, {
+  model: Neighborhoods,
+  required: false,
+  attributes: ['id', 'name']
+}, {
+  model: Photos,
+  required: false,
+  attributes: ['id', 'src', 'order', 'rotate']
+}, {
+  model: Videos,
+  required: false,
+  attributes: ['id', 'src']
+}, {
+  model: Owners,
+  required: false,
+  attributes: ['id', 'name_or_company']
+}, {
+  model: Employees,
+  required: false,
+  as: 'Broker',
+  attributes: ['id', 'name']
+}, {
+  model: Employees,
+  required: false,
+  as: 'Agent',
+  attributes: ['id', 'name']
+}]
 
 const getNextCodeType = async (type: string, client_id: number): Promise<number> => {
   try {
@@ -155,37 +188,7 @@ export const detail = async (req: Request, res: Response): Promise<any> => {
     // Raw data
     const property = await Properties.findOne({
       where: { client_id: client.id, code },
-      include: [{
-        model: Cities,
-        required: false,
-        attributes: ['id', 'name']
-      }, {
-        model: Neighborhoods,
-        required: false,
-        attributes: ['id', 'name']
-      }, {
-        model: Photos,
-        required: false,
-        attributes: ['id', 'src', 'order', 'rotate']
-      }, {
-        model: Videos,
-        required: false,
-        attributes: ['id', 'src']
-      }, {
-        model: Owners,
-        required: false,
-        attributes: ['id', 'name_or_company']
-      }, {
-        model: Employees,
-        required: false,
-        as: 'Broker',
-        attributes: ['id', 'name']
-      }, {
-        model: Employees,
-        required: false,
-        as: 'Agent',
-        attributes: ['id', 'name']
-      }]
+      include: INCLUDES
     })
 
     // Transformed data
@@ -238,37 +241,7 @@ export const list = async (req: Request, res: Response): Promise<any> => {
       ],
       offset: getOffset(PAGE),
       limit: getLimit(),
-      include: [{
-        model: Cities,
-        required: false,
-        attributes: ['id', 'name']
-      }, {
-        model: Neighborhoods,
-        required: false,
-        attributes: ['id', 'name']
-      }, {
-        model: Photos,
-        required: false,
-        attributes: ['id', 'src', 'order', 'rotate']
-      }, {
-        model: Videos,
-        required: false,
-        attributes: ['id', 'src']
-      }, {
-        model: Owners,
-        required: false,
-        attributes: ['id', 'name_or_company']
-      }, {
-        model: Employees,
-        required: false,
-        as: 'Broker',
-        attributes: ['id', 'name']
-      }, {
-        model: Employees,
-        required: false,
-        as: 'Agent',
-        attributes: ['id', 'name']
-      }]
+      include: INCLUDES
     })
 
     // Transformed data
@@ -317,6 +290,78 @@ export const destroy = async (req: Request, res: Response): Promise<any> => {
     const property = await Properties.destroy({ where: { client_id: client.id, code } })
 
     return res.status(200).json({ status: 200, message: 'Successful.', response: property });
+  } catch (error) {
+    console.error( error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const search = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { lang } = req.query
+    const { search } = req.params
+
+    const { client: clientJwt } = extractUserFromToken(req)
+
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
+
+    // Raw data
+    let properties: PropertyModel[]
+
+    properties = await Properties.findAll({
+      where: { client_id: client.id, code: search },
+      include: INCLUDES
+    })
+
+    if (!properties.length)
+      properties = await Properties.findAll({
+        where: { client_id: client.id, code_pretty: search },
+        include: INCLUDES
+      })
+
+    if (!properties.length)
+      properties = await Properties.findAll({
+        where: { client_id: client.id, location_street: {
+          [Op.like]: `%${search}%`
+        }},
+        include: INCLUDES
+      })
+
+    if (!properties.length) {
+      const ownerIds = []
+      const rawOwners = await db.query(`SELECT id FROM owners WHERE client_id = ${client.id} AND name_or_company LIKE '%${search}%'`)
+      rawOwners.forEach((item) => ownerIds.push(item[0].id))
+
+      properties = await Properties.findAll({
+        where: { 
+          client_id: client.id,
+          owner_id: { [Op.in]: ownerIds }
+        },
+        include: INCLUDES
+      })
+    }
+
+    if (!properties.length) return res.status(202).json({
+      error: `There's no property for: ${search}`,
+    });
+
+    // Transformed data
+    const transformedData = properties.map(item => transformProperty(item, client))
+
+    const enDataFields = {
+      paginate: {
+        data: transformedData,
+        message: 'Success',
+        status: 200
+      }
+    }
+
+    // Translated fields
+    if (lang !== 'EN') {
+      enDataFields.paginate.data = transformedData.map(item => propertyParseEnToPt(item))
+    }
+
+    return res.status(200).json(enDataFields);
   } catch (error) {
     console.error( error);
     return res.status(500).json({ error: error.message });

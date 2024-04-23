@@ -69,7 +69,7 @@ export interface IOwner {
 }
 
 // Define the Owner model with the interface and extend Model
-interface OwnerModel extends Model<IOwner>, IOwner {}
+export interface OwnerModel extends Model<IOwner>, IOwner {}
 
 // Define the owners table
 export const Owners = db.define<OwnerModel>('Owner', {
