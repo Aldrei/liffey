@@ -213,8 +213,9 @@ export const detail = async (req: Request, res: Response): Promise<any> => {
 
 export const list = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { lang, page } = req.query
+    const { lang, page, orderASC } = req.query
 
+    const ORDER_ASC = orderASC === 'false' ? 'DESC' : 'ASC'
     const PAGE = getValidPage(page)
 
     const { client: clientJwt } = extractUserFromToken(req)
@@ -230,8 +231,11 @@ export const list = async (req: Request, res: Response): Promise<any> => {
 
     const properties = await Properties.findAll({
       where: {
-        client_id: client.id
+        client_id: client.id,
       },
+      order: [
+        ['id', ORDER_ASC]
+      ],
       offset: getOffset(PAGE),
       limit: getLimit(),
       include: [{
