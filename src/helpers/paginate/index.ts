@@ -13,3 +13,5 @@ export const getOffset = (page: number) => (getValidPage(page) * PAGINATE_PER_PA
 export const getPerPage = () => PAGINATE_PER_PAGE
 
 export const getLimit = () => PAGINATE_PER_PAGE
+
+export const getTotalPages = (total: number) => Math.ceil(total / PAGINATE_PER_PAGE)

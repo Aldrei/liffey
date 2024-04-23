@@ -3,7 +3,7 @@ import { Cities, Clients, Employees, IProperty, Neighborhoods, Owners, Photos, P
 import { propertyParseEnToPt, propertyParsePayloadPtToEn } from '@/database/parse/property';
 import { transformProperty } from '@/database/transformers/property';
 import { dateBrToDb, decimalBrToDb, makeCodePretty } from '@/helpers';
-import { getLimit, getNextPage, getOffset, getPerPage, getPrevPage, getValidPage } from '@/helpers/paginate';
+import { getLimit, getNextPage, getOffset, getPerPage, getPrevPage, getTotalPages, getValidPage } from '@/helpers/paginate';
 import { extractUserFromToken } from '@/helpers/token';
 import { Request, Response } from 'express';
 
@@ -222,6 +222,12 @@ export const list = async (req: Request, res: Response): Promise<any> => {
     const client = await Clients.findOne({ where: { id: clientJwt.id } })
 
     // Raw data
+    const total = await Properties.count({ 
+      where: {
+        client_id: client.id
+      },
+    })
+
     const properties = await Properties.findAll({
       where: {
         client_id: client.id
@@ -269,11 +275,10 @@ export const list = async (req: Request, res: Response): Promise<any> => {
         data: transformedData,
         meta: {
           pagination: {
-            // total: 132,
-            // count: 10,
+            total: total,
             per_page: getPerPage(),
             current_page: PAGE,
-            // total_pages: 14,
+            total_pages: getTotalPages(total),
             links: {
                 previous: getPrevPage(PAGE),
                 next: getNextPage(PAGE)
