@@ -1,4 +1,4 @@
-import { IOwner, Owners } from '@/database/models'
+import { IOwner, OwnerModel, Owners } from '@/database/models'
 import { ownerParseEnToPt } from '@/database/parse/owner'
 import { transformOwner } from '@/database/transformers/owner'
 import { extractUserFromToken } from '@/helpers/token'
@@ -13,14 +13,24 @@ export const search = async (req: Request, res: Response): Promise<any> => {
     const { client } = extractUserFromToken(req)
 
     // Raw data
-    const owners = await Owners.findAll({ 
+    let owners: OwnerModel[]
+
+    owners = await Owners.findAll({ 
       where: { 
         client_id: client.id,
-        name_or_company: {
-          [Op.like]: `%${search}%`
-        }
+        id: search
       } 
     })
+
+    if (!owners?.length)
+      owners = await Owners.findAll({ 
+        where: { 
+          client_id: client.id,
+          name_or_company: {
+            [Op.like]: `%${search}%`
+          }
+        } 
+      })
 
     // Transformed data
     const transformedOwners = owners.map(owner => transformOwner(owner))
