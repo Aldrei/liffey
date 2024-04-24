@@ -90,9 +90,9 @@ export const Owners = db.define<OwnerModel>('Owner', {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: true,
   },
-  owner_id: {
+  owner_id: { // Deprecated
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   name_or_company: {
     type: DataTypes.STRING,
@@ -100,31 +100,31 @@ export const Owners = db.define<OwnerModel>('Owner', {
   },
   cpf_or_cnpj: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   rg: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   driver_license: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   person_type: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   state_registration: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   gender: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   marital_status: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   birth_date: {
     type: DataTypes.DATEONLY,
@@ -133,11 +133,11 @@ export const Owners = db.define<OwnerModel>('Owner', {
   },
   place_of_birth: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   profession: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   income: {
     type: DataTypes.DECIMAL(15, 2),
@@ -145,71 +145,71 @@ export const Owners = db.define<OwnerModel>('Owner', {
   },
   state: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   idCidade: {  // Deprecated
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   idBairro: {  // Deprecated
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   street: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   number: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   zip_code: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   apartment: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   phone: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   cellphone: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   fax: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   email: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   email2: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   notes: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_cpf: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_rg: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_driver_license: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_birth_date: {
     type: DataTypes.STRING,
@@ -218,79 +218,79 @@ export const Owners = db.define<OwnerModel>('Owner', {
   },
   spouse_place_of_birth: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_profession: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_income: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_father: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_mother: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   same_address_as_owner: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_state: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_idCidade: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_idBairro: { // Deprecated
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_street: { // Deprecated
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_number: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_zip_code: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_apartment: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_phone: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_cellphone: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_fax: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_email: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_email2: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_credit_analysis: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_credit_analysis_entry: {
     type: DataTypes.STRING,
@@ -304,28 +304,28 @@ export const Owners = db.define<OwnerModel>('Owner', {
   },
   spouse_credit_analysis_value: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   spouse_notes: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   photo: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   thumbnail: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   created_at: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     defaultValue: DataTypes.NOW,
   },
   updated_at: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     defaultValue: DataTypes.NOW,
     onUpdate: 'CURRENT_TIMESTAMP',
   },

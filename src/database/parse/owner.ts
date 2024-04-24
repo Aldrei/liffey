@@ -193,7 +193,7 @@ export const ownerParseEnToPt = <T>(source: any) => ({
   updated_at: source.updated_at
 } as T);
 
-export const ownerParcePayloadPtToEn = <T>(source: any) => ({
+export const ownerParsePayloadPtToEn = <T>(source: any) => ({
   client_id: source.client_id,
   city_id: source.city_id,
   neighborhood_id: source.neighborhood_id,

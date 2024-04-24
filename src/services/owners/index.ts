@@ -1,10 +1,19 @@
 import { Clients, IOwner, OwnerModel, Owners } from '@/database/models'
-import { ownerParseEnToPt } from '@/database/parse/owner'
+import { ownerParseEnToPt, ownerParsePayloadPtToEn } from '@/database/parse/owner'
 import { transformOwner } from '@/database/transformers/owner'
 import { getLimit, getNextPage, getOffset, getPerPage, getPrevPage, getTotalPages, getValidPage } from '@/helpers/paginate'
 import { extractUserFromToken } from '@/helpers/token'
 import { Request, Response } from 'express'
 import { Op } from 'sequelize'
+
+
+const prepareFieldsToCreate = async (body: any): Promise<Partial<IOwner>> => {
+  let inputs: Partial<IOwner> = ownerParsePayloadPtToEn(body)
+
+  // ...
+
+  return inputs
+}
 
 export const search = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -112,6 +121,32 @@ export const list = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json(enDataFields);
   } catch (error) {
     console.error( error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const store = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { user } = extractUserFromToken(req)
+    const client = await Clients.findOne({ where: { user_id: user.id } })
+
+    const { body } = req
+
+    body.client_id = client.id
+
+    const inputs = await prepareFieldsToCreate(body);
+
+    const newData = await Owners.create(inputs);
+
+    return res.status(200).json({ 
+      owner: {
+        data: newData
+      }, 
+      message: 'Owner created successfully',
+      status: 200
+    });
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({ error: error.message });
   }
 }
