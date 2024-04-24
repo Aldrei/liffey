@@ -82,7 +82,6 @@ export const PhotosSetup = {
   syncAssociations: async () => {
     // Application level.
     Photos.belongsTo(Properties, { foreignKey: 'property_id', onDelete: 'CASCADE' });
-    Properties.hasMany(Photos, { foreignKey: 'property_id' })
   },
   syncRelationships: async () => {
     // Database level.

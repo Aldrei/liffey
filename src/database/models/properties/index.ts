@@ -1,6 +1,6 @@
 // Import Sequelize and necessary types
 import db from '@/database/instance';
-import { Cities, Clients, Employees, ICity, IEmployees, INeighborhood, IOwner, IPhoto, IVideo, Neighborhoods, Owners } from '@/database/models';
+import { Cities, Clients, Employees, ICity, IEmployees, INeighborhood, IOwner, IPhoto, IVideo, Neighborhoods, Owners, Photos } from '@/database/models';
 import { DataTypes, Model } from 'sequelize';
 
 // Define the interface for the properties model
@@ -106,8 +106,8 @@ export interface IProperty {
   Owner?: IOwner;
   Broker?: IEmployees;
   Agent?: IEmployees;
-  Photo?: IPhoto[]
-  Video?: IVideo[]
+  Photos?: IPhoto[]
+  Videos?: IVideo[]
   created_at?: Date;
   updated_at?: Date;
 }
@@ -536,6 +536,7 @@ export const PropertiesSetup = {
     Properties.belongsTo(Clients, { foreignKey: 'client_id', onDelete: 'CASCADE' });
     Properties.belongsTo(Neighborhoods, { foreignKey: 'neighborhood_id', onDelete: 'SET NULL' });
     Properties.belongsTo(Owners, { foreignKey: 'owner_id', onDelete: 'SET NULL' });
+    Properties.hasMany(Photos, { foreignKey: 'property_id' });
   },
   syncRelationships: async () => {
     // Database level.

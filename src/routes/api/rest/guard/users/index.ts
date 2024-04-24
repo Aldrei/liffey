@@ -11,7 +11,8 @@ router.get('/api/who-is-auth', async (req: Request, res: Response) => {
   try {
     const lang = req.header('lang')
 
-    const { user } = extractUserFromToken(req)
+    const { user, error } = extractUserFromToken(req)
+    if (error) return res.status(401).json({ error: `Forbidden. ${error}` })
 
     // Raw data
     const client = await Clients.findOne({ where: { user_id: user.id } })
@@ -41,10 +42,10 @@ router.get('/api/who-is-auth', async (req: Request, res: Response) => {
       enDataFields.employee.data = employeeParseEnToPt(transformedEmployee)
     }
 
-    return res.send(enDataFields)
+    return res.json(enDataFields)
   } catch (error) {
     console.log(error);
-    res.status(500).send({
+    res.status(500).json({
       error: error.message
     })
   }
