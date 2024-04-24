@@ -217,3 +217,19 @@ export const detail = async (req: Request, res: Response): Promise<any> => {
     return res.status(500).json({ error: error.message });
   }
 }
+
+export const destroy = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { id } = req.params
+
+    const { client: clientJwt } = extractUserFromToken(req)
+
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
+    const property = await Owners.destroy({ where: { client_id: client.id, id } })
+
+    return res.status(200).json({ status: 200, message: 'Successful.', response: property });
+  } catch (error) {
+    console.error( error);
+    return res.status(500).json({ error: error.message });
+  }
+}

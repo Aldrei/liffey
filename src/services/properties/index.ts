@@ -281,7 +281,6 @@ export const list = async (req: Request, res: Response): Promise<any> => {
 
 export const destroy = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { lang } = req.query
     const { code } = req.params
 
     const { client: clientJwt } = extractUserFromToken(req)
