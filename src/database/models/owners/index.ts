@@ -1,6 +1,9 @@
 // Import Sequelize and necessary types
 import db from '@/database/instance';
 import { DataTypes, Model } from 'sequelize';
+import { Cities, ICity } from '../cities';
+import { Clients } from '../clients';
+import { INeighborhood, Neighborhoods } from '../neighborhoods';
 
 // Define the interface for the owners model
 export interface IOwner {
@@ -63,6 +66,8 @@ export interface IOwner {
   spouse_credit_analysis_value: string;
   spouse_notes: string;
   photo: string;
+  City?: ICity;
+  Neighborhood?: INeighborhood;
   thumbnail: string;
   created_at?: Date;
   updated_at?: Date;
@@ -80,7 +85,7 @@ export const Owners = db.define<OwnerModel>('Owner', {
   },
   client_id: {
     type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
+    allowNull: false,
   },
   city_id: {
     type: DataTypes.INTEGER.UNSIGNED,
@@ -337,12 +342,13 @@ export const Owners = db.define<OwnerModel>('Owner', {
 
 export const OwnersSetup = {
   syncTable: async () => await Owners.sync({ force: true }),
-  syncRelationships: async () => {
+  syncAssociations: async () => {
     // Application level.
-    Owners.belongsTo(db.models.City, { foreignKey: 'city_id' });
-    Owners.belongsTo(db.models.Client, { foreignKey: 'client_id', onDelete: 'CASCADE' });
-    Owners.belongsTo(db.models.Neighborhood, { foreignKey: 'neighborhood_id' });
-
+    Owners.belongsTo(Cities, { foreignKey: 'city_id' });
+    Owners.belongsTo(Clients, { foreignKey: 'client_id', onDelete: 'CASCADE' });
+    Owners.belongsTo(Neighborhoods, { foreignKey: 'neighborhood_id' });
+  },
+  syncRelationships: async () => {
     // Database level.
     await db.query(`
       ALTER TABLE owners

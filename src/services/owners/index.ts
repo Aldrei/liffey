@@ -1,19 +1,14 @@
-import { Clients, IOwner, OwnerModel, Owners } from '@/database/models'
+import { Cities, Clients, IOwner, Neighborhoods, OwnerModel, Owners } from '@/database/models'
 import { ownerParseEnToPt, ownerParsePayloadPtToEn } from '@/database/parse/owner'
-import { transformOwner } from '@/database/transformers/owner'
+import { ITransformedOwners, transformOwner } from '@/database/transformers/owner'
 import { getLimit, getNextPage, getOffset, getPerPage, getPrevPage, getTotalPages, getValidPage } from '@/helpers/paginate'
 import { extractUserFromToken } from '@/helpers/token'
 import { Request, Response } from 'express'
 import { Op } from 'sequelize'
 
 
-const prepareFieldsToCreate = async (body: any): Promise<Partial<IOwner>> => {
-  let inputs: Partial<IOwner> = ownerParsePayloadPtToEn(body)
-
-  // ...
-
-  return inputs
-}
+const prepareFieldsToCreate = async (body: any): Promise<Partial<IOwner>> => ownerParsePayloadPtToEn(body) as Partial<IOwner>
+const prepareFieldsToUpdate = async (body: any): Promise<Partial<IOwner>> => ownerParsePayloadPtToEn(body) as Partial<IOwner>
 
 export const search = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -51,7 +46,7 @@ export const search = async (req: Request, res: Response): Promise<any> => {
 
     // Translated fields
     if (lang !== 'EN') {
-      enDataFields.data = transformedOwners.map((item: IOwner) => ownerParseEnToPt<IOwner>(item))
+      enDataFields.data = transformedOwners.map((item: ITransformedOwners) => ownerParseEnToPt<ITransformedOwners>(item))
     }
 
     return res.status(200).json(enDataFields);
@@ -147,6 +142,78 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     });
   } catch (error) {
     console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const update = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { user } = extractUserFromToken(req)
+    const client = await Clients.findOne({ where: { user_id: user.id } })
+
+    const { id } = req.params
+    const { body } = req
+
+    body.client_id = client.id
+
+    const owner = await Owners.findOne({ where: { client_id: client.id, id } })
+    const inputs = await prepareFieldsToUpdate(body);
+
+    const newData = await owner.update(inputs);
+
+    return res.status(200).json({ 
+      owner: {
+        data: newData
+      }, 
+      message: 'Owner updated successfully',
+      status: 200
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const detail = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { lang } = req.query
+    const { id } = req.params
+
+    const { client: clientJwt } = extractUserFromToken(req)
+
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
+
+    // Raw data
+    const owner = await Owners.findOne({
+      where: { client_id: client.id, id },
+      include: [{
+        model: Cities,
+        required: false
+      }, {
+        model: Neighborhoods,
+        required: false
+      }]
+    })
+
+    // Transformed data
+    const transformedData = transformOwner(owner)
+
+    const enDataFields = {
+      owner: {
+        data: transformedData,
+        message: 'Success',
+        status: 200
+      }
+    }
+
+    // Translated fields
+    if (lang !== 'EN') {
+      enDataFields.owner.data = ownerParseEnToPt(transformedData)
+    }
+
+    return res.status(200).json(enDataFields);
+  } catch (error) {
+    console.error( error);
     return res.status(500).json({ error: error.message });
   }
 }

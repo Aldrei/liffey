@@ -1,3 +1,6 @@
+import { cityParseEnToPt } from "./city";
+import { neighborhoodParseEnToPt } from "./neighborhood";
+
 export const ownerSource = [{
   "id": 1,
   "client_id": 1001,
@@ -190,7 +193,13 @@ export const ownerParseEnToPt = <T>(source: any) => ({
   foto: source.photo,
   fotoMini: source.thumbnail,
   created_at: source.created_at,
-  updated_at: source.updated_at
+  updated_at: source.updated_at,
+  city: {
+    data: cityParseEnToPt(source?.city?.data)
+  },
+  neighborhood: {
+    data: neighborhoodParseEnToPt(source?.neighborhood?.data)
+  },
 } as T);
 
 export const ownerParsePayloadPtToEn = <T>(source: any) => ({
