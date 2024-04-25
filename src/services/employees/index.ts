@@ -8,7 +8,13 @@ import { Op } from 'sequelize'
 import { TEmployeeResponse } from './types'
 
 const prepareFieldsToCreate = async (body: any): Promise<Partial<IEmployees>> => employeeParsePtToEn(body) as Partial<IEmployees>
-const prepareFieldsToUpdate = async (body: any): Promise<Partial<IEmployees>> => employeeParsePtToEn(body) as Partial<IEmployees>
+const prepareFieldsToUpdate = async (body: any): Promise<Partial<IEmployees>> => {
+  const data = employeeParsePtToEn(body) as Partial<IEmployees>
+
+  delete data.photo
+
+  return data
+}
 
 export const search = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -172,6 +178,34 @@ export const store = async (req: Request, res: Response): Promise<any> => {
         data: newData
       }, 
       message: 'Employee created successfully',
+      status: 200
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const update = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { user } = extractUserFromToken(req)
+    const client = await Clients.findOne({ where: { user_id: user.id } })
+
+    const { id } = req.params
+    const { body } = req
+
+    body.client_id = client.id
+
+    const employee = await Employees.findOne({ where: { client_id: client.id, id } })
+    const inputs = await prepareFieldsToUpdate(body);
+
+    const newData = await employee.update(inputs);
+
+    return res.status(200).json({
+      employee: {
+        data: newData
+      }, 
+      message: 'Employee updated successfully',
       status: 200
     });
   } catch (error) {
