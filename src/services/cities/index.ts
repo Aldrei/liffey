@@ -161,3 +161,31 @@ export const detail = async (req: Request, res: Response): Promise<any> => {
     return res.status(500).json({ error: error.message });
   }
 }
+
+export const update = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { user } = extractUserFromToken(req)
+    const client = await Clients.findOne({ where: { user_id: user.id } })
+
+    const { id } = req.params
+    const { body } = req
+
+    body.client_id = client.id
+
+    const owner = await Cities.findOne({ where: { client_id: client.id, id } })
+    const inputs = await prepareFieldsToUpdate(body);
+
+    const newData = await owner.update(inputs);
+
+    return res.status(200).json({ 
+      owner: {
+        data: newData
+      }, 
+      message: 'City updated successfully',
+      status: 200
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+}
