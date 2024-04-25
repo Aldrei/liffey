@@ -1,3 +1,6 @@
+import { cityParseEnToPt } from "./city";
+import { neighborhoodParseEnToPt } from "./neighborhood";
+
 export const employeeParseEnToPt = <T>(source: any): T => ({
   id: source.id,
   user_id: source.user_id,
@@ -27,5 +30,11 @@ export const employeeParseEnToPt = <T>(source: any): T => ({
   publicarNoSite: source.publish_on_website,
   oculto: source.hidden,
   created_at: source.created_at,
-  updated_at: source.updated_at
+  updated_at: source.updated_at,
+  city: {
+    data: cityParseEnToPt(source?.city?.data)
+  },
+  neighborhood: {
+    data: neighborhoodParseEnToPt(source?.neighborhood?.data)
+  },
 }) as T

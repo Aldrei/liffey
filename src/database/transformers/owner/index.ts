@@ -6,6 +6,7 @@ import { transformNeighborhood } from "../neighborhood";
 interface TSubData<T> {
   data: T
 }
+
 export interface ITransformedOwners extends IOwner {
   city: TSubData<ICity>
   neighborhood: TSubData<INeighborhood>

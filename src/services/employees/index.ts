@@ -1,4 +1,4 @@
-import { Clients, Employees, IEmployees } from '@/database/models'
+import { Cities, Clients, Employees, IEmployees, Neighborhoods } from '@/database/models'
 import { employeeParseEnToPt } from '@/database/parse/employee'
 import { ITransformedEmployee, transformEmployee } from '@/database/transformers/employee'
 import { getLimit, getNextPage, getOffset, getPerPage, getPrevPage, getTotalPages, getValidPage } from '@/helpers/paginate'
@@ -98,6 +98,50 @@ export const list = async (req: Request, res: Response): Promise<any> => {
     // Translated fields
     if (lang !== 'EN') {
       enDataFields.paginate.data = transformedData.map((item: ITransformedEmployee) => employeeParseEnToPt(item))
+    }
+
+    return res.status(200).json(enDataFields);
+  } catch (error) {
+    console.error( error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const detail = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { lang } = req.query
+    const { id } = req.params
+
+    const { client: clientJwt } = extractUserFromToken(req)
+
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
+
+    // Raw data
+    const employee = await Employees.findOne({
+      where: { client_id: client.id, id },
+      include: [{
+        model: Cities,
+        required: false
+      }, {
+        model: Neighborhoods,
+        required: false
+      }]
+    })
+
+    // Transformed data
+    const transformedData = transformEmployee(employee)
+
+    const enDataFields = {
+      employee: {
+        data: transformedData,
+        message: 'Success',
+        status: 200
+      }
+    }
+
+    // Translated fields
+    if (lang !== 'EN') {
+      enDataFields.employee.data = employeeParseEnToPt(transformedData)
     }
 
     return res.status(200).json(enDataFields);

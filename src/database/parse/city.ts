@@ -1,4 +1,4 @@
-export const cityParseEnToPt = <T>(source: any): T => ({
+export const cityParseEnToPt = <T>(source: any): T => (!source ? null : {
   id: source.id,
   state_id: source.state_id,
   name: source.name,
