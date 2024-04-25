@@ -66,7 +66,7 @@ export const Employees = db.define<EmployeeModel>('Employees', {
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   birth_date: {
     type: DataTypes.STRING,
