@@ -1,5 +1,5 @@
 import db from '@/database/instance'; // Replace with your actual path to the Sequelize instance
-import { Clients, States } from '@/database/models';
+import { Clients, IState, States } from '@/database/models';
 import { DataTypes, Model } from 'sequelize';
 
 // Define the interface for the cities model
@@ -8,6 +8,7 @@ export interface ICity {
   client_id?: number | null;
   state_id: number;
   name: string;
+  State?: IState
   created_at?: Date | null;
   updated_at?: Date | null;
 }

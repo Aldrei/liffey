@@ -1,4 +1,4 @@
-import { Cities, Clients, ICity } from '@/database/models'
+import { Cities, Clients, ICity, States } from '@/database/models'
 import { cityParseEnToPt, cityParsePtToEn } from '@/database/parse/city'
 import { transformCity } from '@/database/transformers/city'
 import { getPaginateConditions, getPaginateMetadata } from '@/helpers/paginate'
@@ -117,6 +117,47 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     });
   } catch (error) {
     console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const detail = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { lang } = req.query
+    const { id } = req.params
+
+    const { client: clientJwt } = extractUserFromToken(req)
+
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
+
+    // Raw data
+    const dataFound = await Cities.findOne({
+      where: { client_id: client.id, id },
+      include: [{
+        model: States,
+        required: false
+      }]
+    })
+
+    // Transformed data
+    const transformedData = transformCity(dataFound)
+
+    const enDataFields = {
+      city: {
+        data: transformedData,
+        message: 'Success',
+        status: 200
+      }
+    }
+
+    // Translated fields
+    if (lang !== 'EN') {
+      enDataFields.city.data = cityParseEnToPt(transformedData)
+    }
+
+    return res.status(200).json(enDataFields);
+  } catch (error) {
+    console.error( error);
     return res.status(500).json({ error: error.message });
   }
 }

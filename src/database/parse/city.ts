@@ -5,7 +5,8 @@ export const cityParseEnToPt = <T>(source: any): T => (!source ? null : {
   name: source.name,
   long_desc: source.long_desc,
   created_at: source.created_at,
-  updated_at: source.updated_at
+  updated_at: source.updated_at,
+  state: source?.state,
 }) as T
 
 export const cityParsePtToEn = <T>(source: any): T => (!source ? null : {
@@ -15,5 +16,6 @@ export const cityParsePtToEn = <T>(source: any): T => (!source ? null : {
   name: source.name,
   long_desc: source.long_desc,
   created_at: source.created_at,
-  updated_at: source.updated_at
+  updated_at: source.updated_at,
+  state: source?.state,
 }) as T
