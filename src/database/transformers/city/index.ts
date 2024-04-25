@@ -6,9 +6,14 @@ export interface ITransformedCities extends ICity {
 }
 
 export const transformCity = (source: ICity): ITransformedCities => {
-  const data = <ITransformedCities>deepCloneObj(source)
+  try {
+    const data = <ITransformedCities>deepCloneObj(source)
 
-  data.long_desc = `${data.name}`
+    data.long_desc = `${data.name}`
 
-  return data
+    return data
+  } catch (error) {
+    console.error(`transformCity: ${error}`);
+    return null
+  }
 }
