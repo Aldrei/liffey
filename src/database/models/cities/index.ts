@@ -36,12 +36,13 @@ export const Cities = db.define<CityModel>('City', {
   created_at: {
     type: DataTypes.DATE,
     allowNull: true,
-    defaultValue: null,
+    defaultValue: DataTypes.NOW,
   },
   updated_at: {
     type: DataTypes.DATE,
     allowNull: true,
-    defaultValue: null,
+    defaultValue: DataTypes.NOW,
+    onUpdate: 'CURRENT_TIMESTAMP'
   },
 }, {
   tableName: 'cities',
