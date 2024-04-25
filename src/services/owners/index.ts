@@ -1,7 +1,7 @@
 import { Cities, Clients, IOwner, Neighborhoods, OwnerModel, Owners } from '@/database/models'
 import { ownerParseEnToPt, ownerParsePayloadPtToEn } from '@/database/parse/owner'
 import { ITransformedOwners, transformOwner } from '@/database/transformers/owner'
-import { getLimit, getNextPage, getOffset, getPerPage, getPrevPage, getTotalPages, getValidPage } from '@/helpers/paginate'
+import { getPaginateConditions, getPaginateMetadata } from '@/helpers/paginate'
 import { extractUserFromToken } from '@/helpers/token'
 import { Request, Response } from 'express'
 import { Op } from 'sequelize'
@@ -59,10 +59,6 @@ export const search = async (req: Request, res: Response): Promise<any> => {
 export const list = async (req: Request, res: Response): Promise<any> => {
   try {
     const { lang, page, orderASC } = req.query
-
-    const ORDER_ASC = orderASC === 'false' ? 'DESC' : 'ASC'
-    const PAGE = getValidPage(page)
-
     const { client: clientJwt } = extractUserFromToken(req)
 
     const client = await Clients.findOne({ where: { id: clientJwt.id } })
@@ -79,10 +75,18 @@ export const list = async (req: Request, res: Response): Promise<any> => {
         client_id: client.id,
       },
       order: [
-        ['id', ORDER_ASC]
+        ['id', orderASC === 'false' ? 'DESC' : 'ASC']
       ],
-      offset: getOffset(PAGE),
-      limit: getLimit(),
+      include: [{
+        model: Cities,
+        required: false,
+        attributes: ['id', 'name']
+      }, {
+        model: Neighborhoods,
+        required: false,
+        attributes: ['id', 'name']
+      }],
+      ...getPaginateConditions(page)
     })
 
     // Transformed data
@@ -91,20 +95,9 @@ export const list = async (req: Request, res: Response): Promise<any> => {
     const enDataFields = {
       paginate: {
         data: transformedData,
-        meta: {
-          pagination: {
-            total: total,
-            per_page: getPerPage(),
-            current_page: PAGE,
-            total_pages: getTotalPages(total),
-            links: {
-                previous: getPrevPage(PAGE),
-                next: getNextPage(PAGE)
-            }
-          }
-        },
         message: 'Success',
-        status: 200
+        status: 200,
+        ...getPaginateMetadata(page, total, 'owners'),
       }
     }
 
