@@ -1,6 +1,7 @@
 import { Clients, INeighborhood, Neighborhoods } from '@/database/models'
 import { neighborhoodParseEnToPt, neighborhoodParsePtToEn } from '@/database/parse/neighborhood'
 import { transformNeighborhood } from '@/database/transformers/neighborhood'
+import { getPaginateConditions, getPaginateMetadata } from '@/helpers/paginate'
 import { extractUserFromToken } from '@/helpers/token'
 import { Request, Response } from 'express'
 import { Op } from 'sequelize'
@@ -37,6 +38,55 @@ export const search = async (req: Request, res: Response): Promise<any> => {
     // Translated fields
     if (lang !== 'EN') {
       enDataFields.data = transformedNeighborhoods.map((item: INeighborhood) => neighborhoodParseEnToPt<TNeighborhoodResponse>(item))
+    }
+
+    return res.status(200).json(enDataFields);
+  } catch (error) {
+    console.error( error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+
+export const list = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { lang, page, orderASC } = req.query
+    const { client: clientJwt } = extractUserFromToken(req)
+
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
+
+    // Raw data
+    const total = await Neighborhoods.count({
+      where: {
+        client_id: client.id
+      },
+    })
+
+    const dataList = await Neighborhoods.findAll({
+      where: {
+        client_id: client.id,
+      },
+      order: [
+        ['id', orderASC === 'false' ? 'DESC' : 'ASC']
+      ],
+      ...getPaginateConditions(page)
+    })
+
+    // Transformed data
+    const transformedData = dataList.map((item: INeighborhood) => transformNeighborhood(item))
+
+    const enDataFields = {
+      paginate: {
+        data: transformedData,
+        message: 'Success',
+        status: 200,
+        ...getPaginateMetadata(page, total, 'neighborhoods'),
+      }
+    }
+
+    // Translated fields
+    if (lang !== 'EN') {
+      enDataFields.paginate.data = transformedData.map((item: INeighborhood) => neighborhoodParseEnToPt(item))
     }
 
     return res.status(200).json(enDataFields);
