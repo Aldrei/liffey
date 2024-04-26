@@ -129,3 +129,40 @@ export const store = async (req: Request, res: Response): Promise<any> => {
     return res.status(500).json({ error: error.message });
   }
 }
+
+export const detail = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { lang } = req.query
+    const { id } = req.params
+
+    const { client: clientJwt } = extractUserFromToken(req)
+
+    const client = await Clients.findOne({ where: { id: clientJwt.id } })
+
+    // Raw data
+    const dataFound = await Neighborhoods.findOne({
+      where: { client_id: client.id, id },
+    })
+
+    // Transformed data
+    const transformedData = transformNeighborhood(dataFound)
+
+    const enDataFields = {
+      neighborhood: {
+        data: transformedData,
+        message: 'Success',
+        status: 200
+      }
+    }
+
+    // Translated fields
+    if (lang !== 'EN') {
+      enDataFields.neighborhood.data = neighborhoodParseEnToPt(transformedData)
+    }
+
+    return res.status(200).json(enDataFields);
+  } catch (error) {
+    console.error( error);
+    return res.status(500).json({ error: error.message });
+  }
+}
