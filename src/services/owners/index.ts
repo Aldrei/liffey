@@ -218,9 +218,9 @@ export const destroy = async (req: Request, res: Response): Promise<any> => {
     const { client: clientJwt } = extractUserFromToken(req)
 
     const client = await Clients.findOne({ where: { id: clientJwt.id } })
-    const property = await Owners.destroy({ where: { client_id: client.id, id } })
+    const dataDeleted = await Owners.destroy({ where: { client_id: client.id, id } })
 
-    return res.status(200).json({ status: 200, message: 'Successful.', response: property });
+    return res.status(200).json({ status: 200, message: 'Successful.', response: dataDeleted });
   } catch (error) {
     console.error( error);
     return res.status(500).json({ error: error.message });
