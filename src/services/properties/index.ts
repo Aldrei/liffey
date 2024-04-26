@@ -3,7 +3,7 @@ import { Cities, Clients, Employees, IProperty, Neighborhoods, Owners, Photos, P
 import { propertyParseEnToPt, propertyParsePayloadPtToEn } from '@/database/parse/property';
 import { transformProperty } from '@/database/transformers/property';
 import { dateBrToDb, decimalBrToDb, makeCodePretty } from '@/helpers';
-import { getLimit, getNextPage, getOffset, getPerPage, getPrevPage, getTotalPages, getValidPage } from '@/helpers/paginate';
+import { getPaginateConditions, getPaginateMetadata } from '@/helpers/paginate';
 import { extractUserFromToken } from '@/helpers/token';
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
@@ -217,10 +217,6 @@ export const detail = async (req: Request, res: Response): Promise<any> => {
 export const list = async (req: Request, res: Response): Promise<any> => {
   try {
     const { lang, page, orderASC } = req.query
-
-    const ORDER_ASC = orderASC === 'false' ? 'DESC' : 'ASC'
-    const PAGE = getValidPage(page)
-
     const { client: clientJwt } = extractUserFromToken(req)
 
     const client = await Clients.findOne({ where: { id: clientJwt.id } })
@@ -237,10 +233,9 @@ export const list = async (req: Request, res: Response): Promise<any> => {
         client_id: client.id,
       },
       order: [
-        ['id', ORDER_ASC]
+        ['id', orderASC === 'false' ? 'DESC' : 'ASC']
       ],
-      offset: getOffset(PAGE),
-      limit: getLimit(),
+      ...getPaginateConditions(page),
       include: INCLUDES
     })
 
@@ -250,20 +245,9 @@ export const list = async (req: Request, res: Response): Promise<any> => {
     const enDataFields = {
       paginate: {
         data: transformedData,
-        meta: {
-          pagination: {
-            total: total,
-            per_page: getPerPage(),
-            current_page: PAGE,
-            total_pages: getTotalPages(total),
-            links: {
-                previous: getPrevPage(PAGE),
-                next: getNextPage(PAGE)
-            }
-          }
-        },
         message: 'Success',
-        status: 200
+        status: 200,
+        ...getPaginateMetadata(page, total, 'properties'),
       }
     }
 
@@ -281,7 +265,6 @@ export const list = async (req: Request, res: Response): Promise<any> => {
 
 export const destroy = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { lang } = req.query
     const { code } = req.params
 
     const { client: clientJwt } = extractUserFromToken(req)

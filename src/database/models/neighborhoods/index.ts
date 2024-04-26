@@ -31,28 +31,30 @@ export const Neighborhoods = db.define<NeighborhoodModel>('Neighborhood', {
   },
   city_id: {
     type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
+    allowNull: false,
   },
   idBairro: {
     type: DataTypes.STRING, // Preserved
-    allowNull: false,
+    allowNull: true,
+    defaultValue: ''
   },
   name: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   idCidade: {
     type: DataTypes.STRING, // Preserved
-    allowNull: false,
+    allowNull: true,
+    defaultValue: ''
   },
   created_at: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     defaultValue: DataTypes.NOW,
   },
   updated_at: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
     defaultValue: DataTypes.NOW,
     onUpdate: 'CURRENT_TIMESTAMP',
   },
