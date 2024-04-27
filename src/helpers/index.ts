@@ -60,7 +60,7 @@ export const removeHTML = (htmlString: string): string => {
     return htmlString.replace(htmlRegex, '');
   } catch (error) {
     console.error(`removeHTML ${error}`);
-    return ''
+    return null
   }
 }
 

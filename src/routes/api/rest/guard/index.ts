@@ -1,3 +1,4 @@
+export * as bannerRoutes from '@/routes/api/rest/guard/banners';
 export * as cityRoutes from '@/routes/api/rest/guard/cities';
 export * as employeesRoutes from '@/routes/api/rest/guard/employees';
 export * as neighborhoodRoutes from '@/routes/api/rest/guard/neighborhoods';

@@ -14,6 +14,7 @@ export const transformVideo = (source: IVideo): ITransformedVideo => {
 
     return data
   } catch (error) {
-    console.error(`transformVideo ${error}`);
+    console.error(`transformVideo: ${error}`);
+    return null
   }
 }

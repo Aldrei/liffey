@@ -13,18 +13,23 @@ export interface ITransformedOwners extends IOwner {
 }
 
 export const transformOwner = (source: IOwner): ITransformedOwners => {
-  const owner = <ITransformedOwners>deepCloneObj(source)
+  try {
+    const owner = <ITransformedOwners>deepCloneObj(source)
 
-  // Relationships/includes
-  owner.city = {
-    data: transformCity(owner?.City)
+    // Relationships/includes
+    owner.city = {
+      data: transformCity(owner?.City)
+    }
+    delete owner.City
+
+    owner.neighborhood = {
+      data: transformNeighborhood(owner?.Neighborhood)
+    }
+    delete owner.Neighborhood
+
+    return owner
+  } catch (error) {
+    console.error(`transformOwner: ${error.message}`);
+    return null
   }
-  delete owner.City
-
-  owner.neighborhood = {
-    data: transformNeighborhood(owner?.Neighborhood)
-  }
-  delete owner.Neighborhood
-
-  return owner
 }

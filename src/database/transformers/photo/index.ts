@@ -16,6 +16,7 @@ export const transformPhoto = (source: IPhoto): ITransformedPhotos => {
 
     return data
   } catch (error) {
-    console.error(`transformPhoto ${error}`);
+    console.error(`transformPhoto: ${error}`);
+    return null
   }
 }
