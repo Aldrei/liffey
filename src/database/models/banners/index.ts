@@ -1,5 +1,7 @@
 import db from '@/database/instance'; // Replace with your actual path to the Sequelize instance
 import { DataTypes, Model } from 'sequelize';
+import { Clients } from '../clients';
+import { IProperty, Properties } from '../properties';
 
 // Define the interface for the banner model
 // Define the interface for the banner model
@@ -17,6 +19,7 @@ export interface IBanner {
   position: number;
   created_at?: Date;
   updated_at?: Date;
+  Property?: IProperty
 }
 
 
@@ -88,11 +91,12 @@ export const Banners = db.define<BannerModel>('Banner', {
 
 export const BannersSetup = {
   syncTable: async () => await Banners.sync({ force: true }),
-  syncRelationships: async () => {
+  syncAssociations: async () => {
     // Application level.
-    Banners.belongsTo(db.models.Client, { foreignKey: 'client_id', onDelete: 'CASCADE' });
-    Banners.belongsTo(db.models.Property, { foreignKey: 'property_id', onDelete: 'CASCADE' });
-
+    Banners.belongsTo(Clients, { foreignKey: 'client_id', onDelete: 'CASCADE' });
+    Banners.belongsTo(Properties, { foreignKey: 'property_id', onDelete: 'CASCADE' });
+  },
+  syncRelationships: async () => {
     // Database level.
     await db.query(`
       ALTER TABLE banners

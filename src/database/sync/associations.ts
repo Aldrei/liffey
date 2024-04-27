@@ -1,9 +1,9 @@
-import { AuthClientsSetup, AuthTokensSetup, CitiesSetup, EmployeesSetup, NeighborhoodsSetup, OwnersSetup, PhotosSetup, PropertiesSetup, VideosSetup } from '@/database/models';
+import { AuthClientsSetup, AuthTokensSetup, BannersSetup, CitiesSetup, EmployeesSetup, NeighborhoodsSetup, OwnersSetup, PhotosSetup, PropertiesSetup, VideosSetup } from '@/database/models';
 
 export const syncAssociations = async () => {
   try {
     // await AnalyticsSetup.syncAssociations()
-    // await BannersSetup.syncAssociations()
+    await BannersSetup.syncAssociations()
     await CitiesSetup.syncAssociations()
     // await ClientsSetup.syncAssociations()
     // await ContentsSetup.syncAssociations()

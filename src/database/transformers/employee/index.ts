@@ -18,23 +18,28 @@ export interface ITransformedEmployee extends Omit<IEmployees, 'photo'> {
 }
 
 export const transformEmployee = (source: IEmployees): ITransformedEmployee => {
-  const data = <ITransformedEmployee>deepCloneObj(source)
+  try {
+    const data = <ITransformedEmployee>deepCloneObj(source)
 
-  data.photo = {
-    thumb: getCdnUrl(source.photo, GetCdnUrlType.THUMB_IMAGE),
-    normal: getCdnUrl(source.photo, GetCdnUrlType.NORMAL_IMAGE),
+    data.photo = {
+      thumb: getCdnUrl(source.photo, GetCdnUrlType.THUMB_IMAGE),
+      normal: getCdnUrl(source.photo, GetCdnUrlType.NORMAL_IMAGE),
+    }
+
+    // Relationships/includes
+    data.city = {
+      data: transformCity(data?.City)
+    }
+    delete data.City
+
+    data.neighborhood = {
+      data: transformNeighborhood(data?.Neighborhood)
+    }
+    delete data.Neighborhood
+
+    return data
+  } catch (error) {
+    console.error(`transformEmployee: ${error.message}`);
+    return null
   }
-
-  // Relationships/includes
-  data.city = {
-    data: transformCity(data?.City)
-  }
-  delete data.City
-
-  data.neighborhood = {
-    data: transformNeighborhood(data?.Neighborhood)
-  }
-  delete data.Neighborhood
-
-  return data
 }
