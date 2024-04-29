@@ -1,6 +1,7 @@
 import { router } from "@/express.instance";
-import { list } from "@/services/banners";
+import { detail, list } from "@/services/banners";
 
 router.get('/api/banners', list)
+router.get('/api/banners/:id', detail)
 
 export default router
