@@ -1,10 +1,13 @@
 import { Banners, Clients, IBanner, Properties } from "@/database/models"
-import { bannerParseEnToPt } from "@/database/parse/banner"
+import { bannerParseEnToPt, bannerParsePtToEn } from "@/database/parse/banner"
 import { transformBanner } from "@/database/transformers/banner"
 import { getPaginateConditions, getPaginateMetadata } from "@/helpers/paginate"
 import { extractUserFromToken } from "@/helpers/token"
 
 import { Request, Response } from 'express'
+
+const prepareFieldsToCreate = async (body: any): Promise<Partial<IBanner>> => bannerParsePtToEn(body) as Partial<IBanner>
+const prepareFieldsToUpdate = async (body: any): Promise<Partial<IBanner>> => bannerParsePtToEn(body) as Partial<IBanner>
 
 export const list = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -30,7 +33,7 @@ export const list = async (req: Request, res: Response): Promise<any> => {
       include: [{
         model: Properties,
         required: false,
-        attributes: ['id']
+        attributes: ['id', 'code', 'general_description']
       }],
       ...getPaginateConditions(page)
     })
@@ -74,7 +77,7 @@ export const detail = async (req: Request, res: Response): Promise<any> => {
       include: [{
         model: Properties,
         required: false,
-        attributes: ['id']
+        attributes: ['id', 'code', 'general_description']
       }]
     })
 
@@ -97,6 +100,34 @@ export const detail = async (req: Request, res: Response): Promise<any> => {
     return res.status(200).json(enDataFields);
   } catch (error) {
     console.error( error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const update = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { user } = extractUserFromToken(req)
+    const client = await Clients.findOne({ where: { user_id: user.id } })
+
+    const { id } = req.params
+    const { body } = req
+
+    body.client_id = client.id
+
+    const dataUpdated = await Banners.findOne({ where: { client_id: client.id, id } })
+    const inputs = await prepareFieldsToUpdate(body);
+
+    const newData = await dataUpdated.update(inputs);
+
+    return res.status(200).json({
+      banner: {
+        data: newData
+      }, 
+      message: 'Banner updated successfully',
+      status: 200
+    });
+  } catch (error) {
+    console.error(error);
     return res.status(500).json({ error: error.message });
   }
 }
