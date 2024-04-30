@@ -105,7 +105,7 @@ export const propertySource = [{
   "updated_at": "2024-03-11 20:16:06"
 }]
 
-export const propertyParsePtToEn = <T>(source: any) => ({
+export const propertyParsePtToEn = <T>(source: any) => (!source ? null : {
   id: source.id,
   client_id: source.client_id,
   city_id: source.city_id,

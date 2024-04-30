@@ -147,3 +147,29 @@ export const destroy = async (req: Request, res: Response): Promise<any> => {
     return res.status(500).json({ error: error.message });
   }
 }
+
+export const store = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { user } = extractUserFromToken(req)
+    const client = await Clients.findOne({ where: { user_id: user.id } })
+
+    const { body } = req
+
+    body.client_id = client.id
+
+    const inputs = await prepareFieldsToCreate(body);
+
+    const newData = await Banners.create(inputs);
+
+    return res.status(200).json({
+      banner: {
+        data: newData
+      }, 
+      message: 'Banner created successfully',
+      status: 200
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+}
