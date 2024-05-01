@@ -8,6 +8,7 @@ import { Request, Response } from 'express'
 
 const prepareFieldsToCreate = async (body: any): Promise<Partial<IBanner>> => bannerParsePtToEn(body) as Partial<IBanner>
 const prepareFieldsToUpdate = async (body: any): Promise<Partial<IBanner>> => bannerParsePtToEn(body) as Partial<IBanner>
+const prepareFieldsToUpdatePositions = (body: any): any[] => body?.data?.length ? body.data : []
 
 export const list = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -28,7 +29,7 @@ export const list = async (req: Request, res: Response): Promise<any> => {
         client_id: client.id,
       },
       order: [
-        ['id', orderASC === 'false' ? 'DESC' : 'ASC']
+        ['position', orderASC === 'false' ? 'DESC' : 'ASC']
       ],
       include: [{
         model: Properties,
@@ -166,6 +167,32 @@ export const store = async (req: Request, res: Response): Promise<any> => {
         data: newData
       }, 
       message: 'Banner created successfully',
+      status: 200
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: error.message });
+  }
+}
+
+export const updatePositions = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const { user } = extractUserFromToken(req)
+    const client = await Clients.findOne({ where: { user_id: user.id } })
+
+    const { body } = req
+
+    const inputs = prepareFieldsToUpdatePositions(body);
+
+    inputs.forEach(async (item, i) => {
+      await Banners.update(
+        { position: i+1, },
+        { where: { client_id: client.id, id: item.banner_id } }
+      )
+    })
+
+    return res.status(200).json({
+      message: 'Banner updated successfully',
       status: 200
     });
   } catch (error) {
