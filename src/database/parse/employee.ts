@@ -1,7 +1,7 @@
 import { cityParseEnToPt } from "./city";
 import { neighborhoodParseEnToPt } from "./neighborhood";
 
-export const employeeParsePtToEn = <T>(source: any): T => ({
+export const employeeParsePtToEn = <T>(source: any): T => (!source ? null :{
   id: source.id,
   user_id: source.user_id,
   client_id: source.client_id,
@@ -33,7 +33,7 @@ export const employeeParsePtToEn = <T>(source: any): T => ({
   updated_at: source.updated_at,
 }) as T
 
-export const employeeParseEnToPt = <T>(source: any): T => ({
+export const employeeParseEnToPt = <T>(source: any): T => (!source ? null :{
   id: source.id,
   user_id: source.user_id,
   client_id: source.client_id,

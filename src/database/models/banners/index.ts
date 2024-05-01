@@ -34,43 +34,52 @@ export const Banners = db.define<BannerModel>('Banner', {
   },
   client_id: {
     type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: true,
+    allowNull: false,
   },
   property_id: {
     type: DataTypes.INTEGER.UNSIGNED,
-    allowNull: false,
+    allowNull: true,
+    defaultValue: null
   },
   title: {
     type: DataTypes.STRING,
     allowNull: true,
+    defaultValue: ''
   },
   subtitle: {
     type: DataTypes.STRING,
     allowNull: true,
+    defaultValue: ''
   },
   summary: {
     type: DataTypes.STRING,
     allowNull: true,
+    defaultValue: ''
   },
   general_description: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true,
+    defaultValue: ''
   },
   img: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
+    defaultValue: ''
   },
   thumb: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
+    defaultValue: ''
   },
   link: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
+    defaultValue: ''
   },
   position: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
+    defaultValue: 0
   },
   created_at: {
     type: DataTypes.DATE,

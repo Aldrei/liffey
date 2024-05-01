@@ -66,7 +66,7 @@ export const ownerSource = [{
   "updated_at": "2024-03-15 10:00:00"
 }]
 
-export const ownerParsePtToEn = <T>(source: any) => ({
+export const ownerParsePtToEn = <T>(source: any) => (!source ? null :{
     id: source.id,
     client_id: source.client_id,
     city_id: source.city_id,
@@ -131,7 +131,7 @@ export const ownerParsePtToEn = <T>(source: any) => ({
     updated_at: source.updated_at
 } as T);
 
-export const ownerParseEnToPt = <T>(source: any) => ({
+export const ownerParseEnToPt = <T>(source: any) => (!source ? null : {
   id: source.id,
   client_id: source.client_id,
   city_id: source.city_id,

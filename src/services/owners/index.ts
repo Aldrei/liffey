@@ -6,7 +6,6 @@ import { extractUserFromToken } from '@/helpers/token'
 import { Request, Response } from 'express'
 import { Op } from 'sequelize'
 
-
 const prepareFieldsToCreate = async (body: any): Promise<Partial<IOwner>> => ownerParsePayloadPtToEn(body) as Partial<IOwner>
 const prepareFieldsToUpdate = async (body: any): Promise<Partial<IOwner>> => ownerParsePayloadPtToEn(body) as Partial<IOwner>
 

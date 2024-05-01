@@ -1,3 +1,5 @@
+import { propertyParseEnToPt, propertyParsePtToEn } from "./property"
+
 export const bannerParseEnToPt = <T>(source: any): T => (!source ? null : {
   id: source.id,
   client_id: source.client_id,
@@ -14,7 +16,9 @@ export const bannerParseEnToPt = <T>(source: any): T => (!source ? null : {
   created_at: source.created_at,
   updated_at: source.updated_at,
   // Relationship/association
-  property: source?.property,
+  property: {
+    data: propertyParseEnToPt(source?.property?.data)
+  },
 }) as T
 
 export const bannerParsePtToEn = <T>(source: any): T => (!source ? null : {
@@ -33,5 +37,7 @@ export const bannerParsePtToEn = <T>(source: any): T => (!source ? null : {
   created_at: source.created_at,
   updated_at: source.updated_at,
   // Relationship/association
-  property: source?.property,
+  property: {
+    data: propertyParsePtToEn(source?.property?.data)
+  },
 }) as T
