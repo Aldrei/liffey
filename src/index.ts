@@ -17,7 +17,7 @@ import { typeDefs } from '@/schemas/typeDefs';
 
 /** Routes */
 import { bannerRoutes, cityRoutes, messageRoutes, neighborhoodRoutes, ownerRoutes, propertyPhotosRoutes, propertyRoutes, userRoutes, videosRoutes } from '@/routes/api/rest/guard';
-import { tokenRoutes } from '@/routes/api/rest/public';
+import { publicMessageRoutes, publicTokenRoutes } from '@/routes/api/rest/public';
 
 /** Check Environment */
 import ENV from '@/config';
@@ -143,7 +143,7 @@ const starter = async () => {
     }),
   );
 
-  app.use(tokenRoutes.default)
+  // Private Routes
   app.use(userRoutes.default)
   app.use(propertyRoutes.default)
   app.use(propertyPhotosRoutes.default)
@@ -153,6 +153,10 @@ const starter = async () => {
   app.use(neighborhoodRoutes.default)
   app.use(bannerRoutes.default)
   app.use(messageRoutes.default)
+
+  // Public routes
+  app.use(publicTokenRoutes.default)
+  app.use(publicMessageRoutes.default)
 
   syncAssociations()
 }
