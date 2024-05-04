@@ -1,14 +1,13 @@
 import { IMessage } from "@/database/models"
 import { deepCloneObj } from "@/helpers/object"
-import { ITransformedOwners } from "../owner"
 
 export interface ITransformedMessages extends IMessage {}
 
-export const transformMessage = (source: IMessage): ITransformedOwners => {
+export const transformMessage = (source: IMessage): ITransformedMessages => {
   try {
-    const owner = <ITransformedOwners>deepCloneObj(source)
+    const data = <ITransformedMessages>deepCloneObj(source)
 
-    return owner
+    return data
   } catch (error) {
     console.error(`transformMessage: ${error.message}`);
     return null

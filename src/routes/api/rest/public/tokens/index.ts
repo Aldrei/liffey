@@ -43,7 +43,7 @@ router.post('/oauth/access_token', async (req: Request, res: Response) => {
 
 router.get('/token/encrypt', async (req: Request, res: Response) => {
   try {
-    const token = jwt.sign('bla bla bla', ENV.JWT_SECRET, { algorithm: 'HS256' })
+    const token = jwt.sign({ data: 'Gql Token', timestamp: Date.now() }, ENV.JWT_SECRET, { algorithm: 'HS256' })
 
     return res.send({
       data: token,
