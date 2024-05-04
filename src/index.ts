@@ -17,7 +17,7 @@ import { typeDefs } from '@/schemas/typeDefs';
 
 /** Routes */
 import { bannerRoutes, cityRoutes, messageRoutes, neighborhoodRoutes, ownerRoutes, propertyPhotosRoutes, propertyRoutes, userRoutes, videosRoutes } from '@/routes/api/rest/guard';
-import { publicMessageRoutes, publicTokenRoutes } from '@/routes/api/rest/public';
+import { publicMessageRoutes, publicPropertyAgencyRoutes, publicTokenRoutes } from '@/routes/api/rest/public';
 
 /** Check Environment */
 import ENV from '@/config';
@@ -157,6 +157,7 @@ const starter = async () => {
   // Public routes
   app.use(publicTokenRoutes.default)
   app.use(publicMessageRoutes.default)
+  app.use(publicPropertyAgencyRoutes.default)
 
   syncAssociations()
 }
