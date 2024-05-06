@@ -23,7 +23,7 @@ import { publicMessageRoutes, publicPropertyAgencyRoutes, publicTokenRoutes } fr
 import ENV from '@/config';
 import { syncAssociations } from '@/database/sync/associations';
 import { getLocalhost, isDev, isGqlReferer } from '@/helpers';
-import { validGuardRouteTokenService } from '@/services/auth';
+import { validGuardRouteTokenService, validPublicRouteTokenService } from '@/services/auth';
 import rateLimit from 'express-rate-limit';
 
 (globalThis as any).__DEV__ = isDev();
@@ -72,7 +72,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 /**
  * Authentication for REST API.
 */
-const REST_WHITE_LIST = [ENV.GQL_ENDPOINT, '/oauth/access_token', '/images/', '/favicon.ico']
+const REST_WHITE_LIST = [ENV.GQL_ENDPOINT, '/oauth/access_token', '/api/pub/', '/images/', '/favicon.ico']
 
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -88,7 +88,27 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
     return next()
   } catch (error) {
     console.log(error);
-    return res.status(401).send({ error: error.message })
+    return res.status(401).json({ error: error.message })
+  }
+})
+
+/**
+ * Authentication for REST API to public routes.
+*/
+app.use(async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { originalUrl } = req
+    const { authorization } = req.headers
+
+    if (originalUrl.indexOf('/api/pub/') > -1) {
+      const { error } = await validPublicRouteTokenService(authorization)
+      if (error) throw Error(`Public: ${error}`)
+    }
+
+    return next()
+  } catch (error) {
+    console.log(error);
+    return res.status(401).json({ error: error.message })
   }
 })
 
