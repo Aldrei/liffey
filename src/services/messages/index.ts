@@ -1,4 +1,4 @@
-import { Clients, IMessage, Messages } from "@/database/models"
+import { IMessage, Messages } from "@/database/models"
 import { transformMessage } from "@/database/transformers/message"
 import { getPaginateConditions, getPaginateMetadata } from "@/helpers/paginate"
 import { extractUserFromToken } from "@/helpers/token"
@@ -6,10 +6,8 @@ import { Request, Response } from 'express'
 
 export const list = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { lang, page, orderASC } = req.query
-    const { client: clientJwt } = extractUserFromToken(req)
-
-    const client = await Clients.findOne({ where: { id: clientJwt.id } })
+    const { page, orderASC } = req.query
+    const { client } = extractUserFromToken(req)
 
     // Raw data
     const total = await Messages.count({ 
