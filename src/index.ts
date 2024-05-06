@@ -55,17 +55,13 @@ app.use(express.static('public'));
  * Authentication for GraphQL API.
 */
 app.use((req: Request, res: Response, next: NextFunction) => {
-  // Bye
-  // if (isDev()) return next()
-
   const { origin, referer } = req.headers
 
   const DOMAINS = ENV.CORS_DOMAINS.split(',') as string[]
   if (isDev()) DOMAINS.push(getLocalhost())
 
-  if (isGqlReferer(referer) && !DOMAINS.includes(origin)) {
+  if (isGqlReferer(referer) && !DOMAINS.includes(origin))
     return res.status(401).json({ error: 'Forbidden. Origin unauthorized for this GraphQL referer.' })
-  }
 
   res.header('Access-Control-Allow-Origin', origin)
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -76,28 +72,23 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 /**
  * Authentication for REST API.
 */
+const REST_WHITE_LIST = [ENV.GQL_ENDPOINT, '/oauth/access_token', '/images/', '/favicon.ico']
+
 app.use(async (req: Request, res: Response, next: NextFunction) => {
   try {
-    // Bye
-    // if (isDev()) return next()
-
     const { originalUrl } = req
-    const { authorization } = req.headers
 
-    if (originalUrl === ENV.GQL_ENDPOINT)
-      return next()
+    for (const route of REST_WHITE_LIST) {
+      if (originalUrl.indexOf(route) > -1) return next()
+    }
 
-    if (originalUrl === '/oauth/access_token') return next()
-    if (originalUrl.indexOf('/images/')) return next()
-    if (originalUrl.indexOf('/favicon.ico')) return next()
-
-    const result = await validGuardRouteTokenService(authorization)
-    if (result?.error) throw Error(result.error)
+    const { error } = await validGuardRouteTokenService(req)
+    if (error) throw Error(error)
 
     return next()
   } catch (error) {
     console.log(error);
-    return res.status(401).send({ error: `Forbidden. ${error.message}` })
+    return res.status(401).send({ error: error.message })
   }
 })
 

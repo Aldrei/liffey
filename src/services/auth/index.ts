@@ -1,6 +1,8 @@
 import ENV from '@/config';
 import { AuthTokens } from '@/database/models';
+import { extractUserFromToken } from '@/helpers/token';
 import { IAnalyzeTokenService } from '@/services/auth/types';
+import { Request } from 'express';
 import jwt from 'jsonwebtoken';
 
 export type CustomResolver = (
@@ -14,11 +16,8 @@ export type ResolverAuthentication = (ctx: any, resolver: () => any) => Promise<
 
 export const publicRouteResolver: ResolverAuthentication = async (ctx: any, resolver: () => any) => {
   try {
-    // Bye
-    // if (!isDev()) {
-      const tokenResult = await validPublicRouteTokenService(ctx.token)
-      if (tokenResult?.error) throw new Error(`Public Resolver: ${tokenResult.error}`);
-    // }
+    const tokenResult = await validPublicRouteTokenService(ctx.token)
+    if (tokenResult?.error) throw new Error(`Public Resolver: ${tokenResult.error}`);
 
     return resolver()
   } catch (error) {
@@ -46,15 +45,10 @@ export const validPublicRouteTokenService = async (token: string): Promise<IAnal
   }
 }
 
-export const validGuardRouteTokenService = async (token: string): Promise<IAnalyzeTokenService> => {
+export const validGuardRouteTokenService = async (req: Request): Promise<IAnalyzeTokenService> => {
   try {
-    const tokenValue = token?.split(' ')?.[1]
-
-    if (!tokenValue) throw Error('Forbidden. Undefined token.')
-
-    jwt.verify(tokenValue, ENV.JWT_SECRET)
-
-    // TODO: Validating time expiration...
+    const { error } = extractUserFromToken(req)
+    if (error) throw Error(error)
     
     return { message: 'Authorized token.' }
   } catch (error) {
