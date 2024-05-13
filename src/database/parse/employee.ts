@@ -1,6 +1,14 @@
 import { cityParseEnToPt } from "./city";
 import { neighborhoodParseEnToPt } from "./neighborhood";
 
+export const employeeParsePayloadPtToEn = <T>(source: any): T => {
+  const data = employeeParsePtToEn<T>(source) as Partial<T & { roles: string[] }>
+
+  data.roles = source.roles
+
+  return data as T
+}
+
 export const employeeParsePtToEn = <T>(source: any): T => (!source ? null :{
   id: source.id,
   user_id: source.user_id,

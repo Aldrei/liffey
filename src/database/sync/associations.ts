@@ -1,4 +1,4 @@
-import { AuthClientsSetup, AuthTokensSetup, BannersSetup, CitiesSetup, EmployeesSetup, NeighborhoodsSetup, OwnersSetup, PhotosSetup, PropertiesSetup, VideosSetup } from '@/database/models';
+import { AuthClientsSetup, AuthTokensSetup, BannersSetup, CitiesSetup, EmployeesSetup, NeighborhoodsSetup, OwnersSetup, PhotosSetup, PropertiesSetup, RoleUserSetup, VideosSetup } from '@/database/models';
 
 export const syncAssociations = async () => {
   try {
@@ -32,7 +32,7 @@ export const syncAssociations = async () => {
     // await UsersSetup.syncAssociations()
     // await RolesSetup.syncAssociations()
     // await PermissionsSetup.syncAssociations()
-    // await RoleUserSetup.syncAssociations()
+    await RoleUserSetup.syncAssociations()
     // await RolePermissionSetup.syncAssociations()
     await VideosSetup.syncAssociations()
     await AuthTokensSetup.syncAssociations()

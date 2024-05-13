@@ -2,6 +2,14 @@
 import db from '@/database/instance';
 import { DataTypes, Model } from 'sequelize';
 
+export enum ROLES {
+  ADMINISTRATOR = 'admin',
+  AGENT = 'agent',
+  BROKER = 'broker',
+  FINANCIAL = 'financial',
+  MANAGER = 'manager'
+}
+
 // Define the interface for the roles model
 export interface IRole {
   name: string;

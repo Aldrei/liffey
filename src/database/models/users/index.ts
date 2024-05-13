@@ -6,6 +6,7 @@ import { DataTypes, Model } from 'sequelize';
 export interface IUser {
   id: number;
   name: string;
+  username: string;
   email: string;
   password: string;
   password_temp: string;
@@ -31,9 +32,21 @@ export const Users = db.define<UsersModel>('Users', {
     type: DataTypes.STRING(255),
     allowNull: false,
   },
+  /**
+   * TODO:
+   * 
+   *  Was changed the SQL insert file(1.sql via db:insert command) to named columns because username was add after.
+   * 
+   *  INSERT INTO `users` (id, name, email, password, password_temp, remember_token, token_push, created_at, updated_at, deleted_at) ...
+  */
+  username: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: null
+  },
   email: {
     type: DataTypes.STRING(255),
-    allowNull: false,
+    allowNull: true,
     unique: true,
   },
   password: {
@@ -42,6 +55,7 @@ export const Users = db.define<UsersModel>('Users', {
   },
   password_temp: {
     type: DataTypes.STRING(255),
+    allowNull: true,
     defaultValue: '',
   },
   remember_token: {
@@ -50,20 +64,20 @@ export const Users = db.define<UsersModel>('Users', {
   },
   token_push: {
     type: DataTypes.STRING(255),
-    allowNull: false,
+    allowNull: true,
   },
   created_at: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
   updated_at: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: true,
   },
   deleted_at: {
     type: DataTypes.DATE,
     allowNull: true,
-  },
+  }
 }, {
   tableName: 'users',
   paranoid: true,

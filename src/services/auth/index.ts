@@ -29,8 +29,10 @@ export const publicRouteResolver: ResolverAuthentication = async (ctx: any, reso
 /**
  * Public routes use token 1:1(one token for one request) generated a common secret key between server and client.
 */
-export const validPublicRouteTokenService = async (token: string): Promise<IAnalyzeTokenService> => {
+export const validPublicRouteTokenService = async (authorization: string): Promise<IAnalyzeTokenService> => {
   try {
+    const token = authorization?.split?.(' ')?.[1]
+
     jwt.verify(token, ENV.JWT_SECRET)
 
     const tokenStored = await AuthTokens.findOne({ where: { token }, attributes: ['id'] })

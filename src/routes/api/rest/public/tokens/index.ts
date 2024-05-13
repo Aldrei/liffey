@@ -1,5 +1,5 @@
 import ENV from "@/config";
-import { AuthTokens, Clients, Users } from "@/database/models";
+import { Clients, Users } from "@/database/models";
 import { router } from "@/express.instance";
 import { comparePass } from "@/helpers/pass";
 import { Request, Response } from "express";
@@ -40,48 +40,5 @@ router.post('/oauth/access_token', async (req: Request, res: Response) => {
     })
   }
 })
-
-router.get('/token/encrypt', async (req: Request, res: Response) => {
-  try {
-    const token = jwt.sign({ data: 'Gql Token', timestamp: Date.now() }, ENV.JWT_SECRET, { algorithm: 'HS256' })
-
-    return res.send({
-      data: token,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.send({
-      message: error?.message,
-    })
-  }
-});
-
-router.get('/token/decrypt', async (req: Request, res: Response) => {
-  try {
-    const { token } = req.body
-
-    const decrypted = jwt.verify(token, ENV.JWT_SECRET)
-
-    return res.send({
-      data: decrypted,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.send({ message: error?.message })
-  }
-});
-
-router.get('/token/all', async (req: Request, res: Response) => {
-  try {
-    const result = await AuthTokens.findAll()
-
-    return res.send({
-      data: result,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.send({ message: error?.message })
-  }
-});
 
 export default router
