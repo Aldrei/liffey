@@ -1,5 +1,5 @@
 import { Cities, Clients, Employees, IEmployees, Neighborhoods } from '@/database/models'
-import { employeeParseEnToPt, employeeParsePtToEn } from '@/database/parse/employee'
+import { employeeParseEnToPt, employeeParsePayloadPtToEn, employeeParsePtToEn } from '@/database/parse/employee'
 import { ITransformedEmployee, transformEmployee } from '@/database/transformers/employee'
 import { getPaginateConditions, getPaginateMetadata } from '@/helpers/paginate'
 import { extractUserFromToken } from '@/helpers/token'
@@ -7,7 +7,10 @@ import { Request, Response } from 'express'
 import { Op } from 'sequelize'
 import { TEmployeeResponse } from './types'
 
-const prepareFieldsToCreate = async (body: any): Promise<Partial<IEmployees>> => employeeParsePtToEn(body) as Partial<IEmployees>
+import { transformUser } from '@/database/transformers/user'
+import { store as userStore } from '@/services/users'
+
+const prepareFieldsToCreate = async (body: any): Promise<Partial<IEmployees>> => employeeParsePayloadPtToEn<IEmployees>(body)
 const prepareFieldsToUpdate = async (body: any): Promise<Partial<IEmployees>> => {
   const data = employeeParsePtToEn(body) as Partial<IEmployees>
 
@@ -164,11 +167,23 @@ export const store = async (req: Request, res: Response): Promise<any> => {
 
     const inputs = await prepareFieldsToCreate(body);
 
+    const newUser = body.isUser ? await userStore(req, res) : {}
+    if (newUser?.error) return res.status(500).json({ error: newUser.error })
+
+    inputs.user_id = newUser?.user?.data?.id
+    
     const newData = await Employees.create(inputs);
 
-    return res.status(200).json({ 
+    return res.status(200).json({
       employee: {
-        data: newData
+        data: {
+          ...newData.dataValues,
+          user: inputs.user_id ? {
+            data: {
+              ...(transformUser(newUser.user.data))
+            }
+          } : undefined
+        }
       }, 
       message: 'Employee created successfully',
       status: 200

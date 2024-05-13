@@ -34,11 +34,12 @@ export const RoleUser = db.define<RoleUserModel>('RoleUser', {
 
 export const RoleUserSetup = {
   syncTable: async () => await RoleUser.sync({ force: true }),
-  syncRelationships: async () => {
+  syncAssociations: async () => {
     // Application level.
-    RoleUser.belongsTo(Roles, { foreignKey: 'role_name', onDelete: 'CASCADE' });
-    RoleUser.belongsTo(Users, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-
+    RoleUser.hasMany(Users, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+    RoleUser.hasMany(Roles, { foreignKey: 'role_name', onDelete: 'CASCADE' });
+  },
+  syncRelationships: async () => {
     // Database level.
     await db.query(`
       ALTER TABLE role_user
