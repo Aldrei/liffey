@@ -1,10 +1,10 @@
-import { Clients, Employees, Permissions, Roles } from "@/database/models";
+import { Clients, Roles } from "@/database/models";
 import { clientParseEnToPt } from "@/database/parse/client";
 import { employeeParseEnToPt } from "@/database/parse/employee";
 import { transformClient } from "@/database/transformers/client";
-import { transformEmployee } from "@/database/transformers/employee";
 import { router } from "@/express.instance";
 import { extractUserFromToken } from "@/helpers/token";
+import { getEmployee } from "@/services/employees/micro";
 import { Request, Response } from "express";
 
 router.get('/api/who-is-auth', async (req: Request, res: Response) => {
@@ -16,14 +16,13 @@ router.get('/api/who-is-auth', async (req: Request, res: Response) => {
 
     // Raw data
     const client = await Clients.findOne({ where: { user_id: user.id } })
-    const employee = await Employees.findOne({ where: { user_id: user.id } })
+
+    const transformedEmployee = await getEmployee({ clientId: String(client.id), userId: user.id, lang })
 
     const roles = await Roles.findAll()
-    const permissions = await Permissions.findAll()
 
     // Transformed data
     const transformedClient = transformClient(client)
-    const transformedEmployee = transformEmployee(employee)
     
     const enDataFields = {
       client: {
@@ -33,7 +32,6 @@ router.get('/api/who-is-auth', async (req: Request, res: Response) => {
         data: transformedEmployee
       },
       db_roles: roles,
-      db_permissions: permissions
     }
 
     // Translated fields

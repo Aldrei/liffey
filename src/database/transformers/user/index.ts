@@ -1,7 +1,13 @@
 import { IUser } from "@/database/models";
 import { deepCloneObj } from "@/helpers/object";
 
-export interface ITransformedUser extends IUser {}
+interface TSubData<T> {
+  data: T[]
+}
+
+export interface ITransformedUser extends IUser {
+  roles?: TSubData<string>
+}
 
 export const transformUser = (source: IUser): ITransformedUser => {
   try {
@@ -9,6 +15,11 @@ export const transformUser = (source: IUser): ITransformedUser => {
 
     delete data.password
     delete data.password_temp
+
+    data.roles = {
+      data: data?.Roles?.length ? data.Roles.map(role => role.name) : []
+    }
+    delete data.Roles
 
     return data
   } catch (error) {

@@ -1,6 +1,6 @@
 // Import Sequelize and necessary types
 import db from '@/database/instance';
-import { Cities, Clients, ICity, INeighborhood, Neighborhoods, Users } from '@/database/models';
+import { Cities, Clients, ICity, INeighborhood, IUser, Neighborhoods, Users } from '@/database/models';
 import { DataTypes, Model } from 'sequelize';
 
 // Define the interface for the employees model
@@ -34,6 +34,7 @@ export interface IEmployees {
   hidden?: string | null;
   City?: ICity
   Neighborhood?: INeighborhood
+  User?: IUser
   created_at?: Date;
   updated_at?: Date;
 }
@@ -169,8 +170,6 @@ export const Employees = db.define<EmployeeModel>('Employees', {
   timestamps: false,
 });
 
-
-
 export const EmployeesSetup = {
   syncTable: async () => await Employees.sync({ force: true }),
   syncAssociations: async () => {
@@ -178,7 +177,7 @@ export const EmployeesSetup = {
     Employees.belongsTo(Clients, { foreignKey: 'client_id', onDelete: 'CASCADE' });
     Employees.belongsTo(Cities, { foreignKey: 'city_id' });
     Employees.belongsTo(Neighborhoods, { foreignKey: 'neighborhood_id' });
-    Employees.belongsTo(Users, { foreignKey: 'user_id', onDelete: 'SET NULL' });
+    Employees.belongsTo(Users, { foreignKey: 'user_id', onDelete: 'CASCADE' });
   },
   syncRelationships: async () => {
     // Database level.

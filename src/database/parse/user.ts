@@ -28,6 +28,7 @@ export const userParseEnToPt = <T>(source: any): T => (!source ? null :{
   password_temp: source.password_temp,
   remember_token: source.remember_token,
   token_push: source.token_push,
+  roles: source.roles,
   created_at: source.created_at,
   updated_at: source.updated_at,
 }) as T

@@ -32,15 +32,11 @@ export const store = async (req: Request, res: Response): Promise<any> => {
 
     const inputs = await prepareFieldsToCreate(body);
 
-    const newData = await Users.create(inputs, 
-      { transaction: t }
-    );
+    const newData = await Users.create(inputs, { transaction: t });
 
     const newRoles = []
     for (const role of inputs.roles) {
-      const newRole = await RoleUser.create({ user_id: newData.id, role_name: role }, 
-        { transaction: t }
-      )
+      const newRole = await RoleUser.create({ user_id: newData.id, role_name: role }, { transaction: t })
       newRoles.push(newRole)
     }
 

@@ -1,5 +1,6 @@
 // Import Sequelize and necessary types
 import db from '@/database/instance';
+import { IRole, Roles } from '@/database/models/roles';
 import { DataTypes, Model } from 'sequelize';
 
 // Define the interface for the users model
@@ -13,6 +14,7 @@ export interface IUser {
   remember_token: string | null;
   token_push: string;
   created_at: Date;
+  Roles?: IRole[]
   updated_at: Date;
   deleted_at: Date | null;
 }
@@ -87,10 +89,11 @@ export const Users = db.define<UsersModel>('Users', {
 
 export const UsersSetup = {
   syncTable: async () => await Users.sync({ force: true }),
-  syncRelationships: async () => {
+  syncAssociations: async () => {
     // Application level.
-    // ...
-
+    Users.belongsToMany(Roles, { through: 'role_user', foreignKey: 'user_id', timestamps: false })
+  },
+  syncRelationships: async () => {
     // Database level.
     await db.query(`
       ALTER TABLE users

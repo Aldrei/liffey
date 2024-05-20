@@ -1,8 +1,9 @@
-import { ICity, IEmployees, INeighborhood } from "@/database/models";
+import { ICity, IEmployees, INeighborhood, IUser } from "@/database/models";
 import { GetCdnUrlType, getCdnUrl } from "@/helpers/config";
 import { deepCloneObj } from "@/helpers/object";
 import { transformCity } from "../city";
 import { transformNeighborhood } from "../neighborhood";
+import { transformUser } from "../user";
 
 interface TSubData<T> {
   data: T
@@ -15,6 +16,7 @@ export interface ITransformedEmployee extends Omit<IEmployees, 'photo'> {
   }
   city: TSubData<ICity>
   neighborhood: TSubData<INeighborhood>
+  user: TSubData<IUser>
 }
 
 export const transformEmployee = (source: IEmployees): ITransformedEmployee => {
@@ -36,6 +38,11 @@ export const transformEmployee = (source: IEmployees): ITransformedEmployee => {
       data: transformNeighborhood(data?.Neighborhood)
     }
     delete data.Neighborhood
+
+    data.user = {
+      data: transformUser(data?.User)
+    }
+    delete data.User
 
     return data
   } catch (error) {
