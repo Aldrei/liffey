@@ -1,11 +1,10 @@
-import { AuthClientsSetup, AuthTokensSetup, BannersSetup, CitiesSetup, EmployeesSetup, NeighborhoodsSetup, OwnersSetup, PhotosSetup, PropertiesSetup, RoleUserSetup, VideosSetup } from '@/database/models';
+import { AuthClientsSetup, AuthTokensSetup, BannersSetup, CitiesSetup, EmployeesSetup, NeighborhoodsSetup, OwnersSetup, PhotosSetup, PropertiesSetup, RoleUserSetup, RolesSetup, UsersSetup, VideosSetup } from '@/database/models';
 
 export const syncAssociations = async () => {
   try {
     // await AnalyticsSetup.syncAssociations()
     await BannersSetup.syncAssociations()
     await CitiesSetup.syncAssociations()
-    // await ClientsSetup.syncAssociations()
     // await ContentsSetup.syncAssociations()
     // await DomainsSetup.syncAssociations()
     // await EmailsSetup.syncAssociations()
@@ -29,8 +28,8 @@ export const syncAssociations = async () => {
     // await StatesSetup.syncAssociations()
     // await SubscriptionsSetup.syncAssociations()
     // await ThemesSetup.syncAssociations()
-    // await UsersSetup.syncAssociations()
-    // await RolesSetup.syncAssociations()
+    await UsersSetup.syncAssociations()
+    await RolesSetup.syncAssociations()
     // await PermissionsSetup.syncAssociations()
     await RoleUserSetup.syncAssociations()
     // await RolePermissionSetup.syncAssociations()

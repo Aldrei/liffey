@@ -1,6 +1,7 @@
 // Import Sequelize and necessary types
 import db from '@/database/instance';
 import { DataTypes, Model } from 'sequelize';
+import { Users } from '../users';
 
 export enum ROLES {
   ADMINISTRATOR = 'admin',
@@ -53,10 +54,11 @@ export const Roles = db.define<RolesModel>('Roles', {
 
 export const RolesSetup = {
   syncTable: async () => await Roles.sync({ force: true }),
-  syncRelationships: async () => {
+  syncAssociations: async () => {
     // Application level.
-    // ...
-
+    Roles.belongsToMany(Users, { through: 'role_user', foreignKey: 'role_name', timestamps: false })
+  },
+  syncRelationships: async () => {
     // Database level.
     await db.query(`
       ALTER TABLE roles

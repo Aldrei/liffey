@@ -1,6 +1,5 @@
 // Import Sequelize and necessary types
 import db from '@/database/instance';
-import { Roles, Users } from '@/database/models';
 import { DataTypes, Model } from 'sequelize';
 
 // Define the interface for the role_user model
@@ -18,26 +17,29 @@ export const RoleUser = db.define<RoleUserModel>('RoleUser', {
     type: DataTypes.STRING(255),
     allowNull: false,
     primaryKey: true,
-    onDelete: 'CASCADE',
   },
   user_id: {
     type: DataTypes.INTEGER.UNSIGNED,
     allowNull: false,
     primaryKey: true,
     onDelete: 'CASCADE',
-  },
+  }
 }, {
   tableName: 'role_user',
   collate: 'utf8_unicode_ci',
   timestamps: false,
+  defaultScope: {
+    attributes: {
+      exclude: ['createdAt', 'updatedAt']
+    }
+  }
 });
 
 export const RoleUserSetup = {
   syncTable: async () => await RoleUser.sync({ force: true }),
   syncAssociations: async () => {
     // Application level.
-    RoleUser.hasMany(Users, { foreignKey: 'user_id', onDelete: 'CASCADE' });
-    RoleUser.hasMany(Roles, { foreignKey: 'role_name', onDelete: 'CASCADE' });
+    // ...
   },
   syncRelationships: async () => {
     // Database level.

@@ -1,4 +1,4 @@
-import { AnalyticsSetup, AuthClientsSetup, AuthTokensSetup, BannersSetup, CitiesSetup, ClientsSetup, ContentsSetup, DomainsSetup, EmailsSetup, EmployeesEmailsSetup, EmployeesSetup, MessagesSetup, NeighborhoodsSetup, OrdersSetup, OwnersSetup, PalettesSetup, PasswordsResetsSetup, PaymentsCategoriesSetup, PaymentsSetup, PaypalWebProfileSetup, PermissionsSetup, PhotosSetup, PlansSetup, PropertiesAgenciesSetup, PropertiesSetup, ProspectsSetup, ReceivablesCategoriesSetup, ReceivablesSetup, RolePermissionSetup, RoleUserSetup, RolesSetup, StatesSetup, SubscriptionsSetup, ThemesSetup, UsersSetup, VideosSetup } from "@/database/models"
+import { AnalyticsSetup, AuthClientsSetup, AuthTokensSetup, BannersSetup, CitiesSetup, ClientsSetup, ContentsSetup, DomainsSetup, EmailsSetup, EmployeesEmailsSetup, EmployeesSetup, MessagesSetup, NeighborhoodsSetup, OrdersSetup, OwnersSetup, PalettesSetup, PasswordsResetsSetup, PaymentsCategoriesSetup, PaymentsSetup, PaypalWebProfileSetup, PhotosSetup, PlansSetup, PropertiesAgenciesSetup, PropertiesSetup, ProspectsSetup, ReceivablesCategoriesSetup, ReceivablesSetup, RoleUserSetup, RolesSetup, StatesSetup, SubscriptionsSetup, ThemesSetup, UsersSetup, VideosSetup } from "@/database/models"
 
 export const syncTables = async () => {
   try {
@@ -36,9 +36,7 @@ export const syncTables = async () => {
     await ThemesSetup.syncTable()
     await UsersSetup.syncTable()
     await RolesSetup.syncTable()
-    await PermissionsSetup.syncTable()
     await RoleUserSetup.syncTable()
-    await RolePermissionSetup.syncTable()
     await VideosSetup.syncTable()
     await AuthTokensSetup.syncTable()
     await AuthClientsSetup.syncTable()

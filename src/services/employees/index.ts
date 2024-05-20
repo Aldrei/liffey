@@ -8,6 +8,7 @@ import { Op } from 'sequelize'
 import { TEmployeeResponse } from './types'
 
 import { transformUser } from '@/database/transformers/user'
+import { getEmployee } from '@/services/employees/micro'
 import { store as userStore } from '@/services/users'
 
 const prepareFieldsToCreate = async (body: any): Promise<Partial<IEmployees>> => employeeParsePayloadPtToEn<IEmployees>(body)
@@ -114,27 +115,12 @@ export const list = async (req: Request, res: Response): Promise<any> => {
 
 export const detail = async (req: Request, res: Response): Promise<any> => {
   try {
-    const { lang } = req.query
+    const lang = req.query.lang as string
     const { id } = req.params
 
     const { client: clientJwt } = extractUserFromToken(req)
 
-    const client = await Clients.findOne({ where: { id: clientJwt.id } })
-
-    // Raw data
-    const employee = await Employees.findOne({
-      where: { client_id: client.id, id },
-      include: [{
-        model: Cities,
-        required: false
-      }, {
-        model: Neighborhoods,
-        required: false
-      }]
-    })
-
-    // Transformed data
-    const transformedData = transformEmployee(employee)
+    const transformedData = await getEmployee({ clientId: clientJwt.id, employeeId: id, lang })
 
     const enDataFields = {
       employee: {
@@ -142,11 +128,6 @@ export const detail = async (req: Request, res: Response): Promise<any> => {
         message: 'Success',
         status: 200
       }
-    }
-
-    // Translated fields
-    if (lang !== 'EN') {
-      enDataFields.employee.data = employeeParseEnToPt(transformedData)
     }
 
     return res.status(200).json(enDataFields);
