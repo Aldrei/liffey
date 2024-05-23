@@ -1,33 +1,38 @@
 import ENV from "@/config";
-import { Clients, Users } from "@/database/models";
+import { Employees, Users } from "@/database/models";
 import { router } from "@/express.instance";
 import { comparePass } from "@/helpers/pass";
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
+import { Op } from "sequelize";
 
 router.post('/oauth/access_token', async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body
 
     const user = await Users.findOne({
-      where: { email: username },
-      attributes: ['id', 'password', 'email']
+      where: {
+        [Op.or]: [{ email: username }, { username: username }]
+      },
+      attributes: ['id', 'password', 'email', 'username']
     })
 
-    const client = await Clients.findOne({ where: { user_id: user.id } })
+    if (!user?.id) return res.status(401).send({ error: 'Forbidden. Username or password incorrect.' })
 
     const check = comparePass(password, user.password)
-
     if (!check) return res.status(401).send({ error: 'Forbidden. Username or password incorrect.' })
 
+    const employee = await Employees.findOne({ where: { user_id: user.id } })
+
     const token = jwt.sign({ user: {
-      id: user.id, 
-      email: username
+      id: user.id,
+      email: user.email,
+      username: user.username
     }, client: {
-      id: client.id
+      id: employee.client_id
     }}, ENV.JWT_SECRET)
 
-    res.send({
+    return res.send({
       token_type: "Bearer",
       refresh_token: token,
       access_token: token,
@@ -35,7 +40,7 @@ router.post('/oauth/access_token', async (req: Request, res: Response) => {
     })
   } catch (error) {
     console.log(error);
-    res.status(500).send({
+    return res.status(500).send({
       error: error.message
     })
   }
