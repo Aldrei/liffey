@@ -28,6 +28,7 @@ export interface IProcessEnv {
   MONOLITHIC_DOMAINS: string
   REACT_APP_DOMAINS: string
   SEAGULL_DOMAINS: string
+  STRIPE_SECRET_KEY: string
 }
 
 dotenv.config()
